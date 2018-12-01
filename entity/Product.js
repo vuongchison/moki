@@ -1,0 +1,39 @@
+class product {
+	id;
+	name;
+	price;
+	price_new;
+	price_type;
+	price_percent;
+	described;
+	ships_from;
+	ships_from_id;
+	condition;
+	created;
+	modified;
+	like;
+	comment;
+	is_liked;
+	best_offers;
+	image;
+	video;
+	size;
+	brand;
+	seller;
+	category;
+	state;
+	is_bloaked;
+	can_edit;
+	banned;
+	can_buy;
+	product_waiting_rate;
+	seller_vacation_mode;			
+	offers;
+	url;
+	weight;
+	dimension;
+	allow_offers;	
+	auto_accept;
+	messages;
+
+}
