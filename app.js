@@ -9,27 +9,34 @@ var errorPage = 'error.html';
 
 function login(input, callback) {
 	if (Validate.checkParam(input, ['phonenumber', 'password'])) {
-		UserDao.checkLoginByPhonenumber(input.phonenumber, input.password, function (err, res) {
-			if (err || res == false) {
-				callback(null, Output.create(9995, {}));
-			}
-			else {
-				UserDao.findByPhonenumber(input.phonenumber, { id: 1, username: 1, avatar: 1 }, function (err, res) {
-					if (err || Validate.isEmpty(res)) {
-						callback(null, Output.create(9995, {}));
-					}
-					else {
-						if (Validate.isEmpty(res.avatar))
-							res.avatar = '-1';
-						var token = UserDao.getToken(input.phonenumber, input.password);
-						res.token = token;
-						callback(null, Output.create(1000, res));
-					}
+		if (Validate.checkPhonenumber(input.phonenumber) && Validate.checkPassword(input.password)) {
 
-				});
+			UserDao.checkLoginByPhonenumber(input.phonenumber, input.password, function (err, res) {
+				if (err || res == false) {
+					callback(null, Output.create(9995, {}));
+				}
+				else {
+					UserDao.findByPhonenumber(input.phonenumber, { id: 1, username: 1, avatar: 1 }, function (err, res) {
+						if (err || Validate.isEmpty(res)) {
+							callback(null, Output.create(9995, {}));
+						}
+						else {
+							if (Validate.isEmpty(res.avatar))
+								res.avatar = '-1';
+							var token = UserDao.getToken(input.phonenumber, input.password);
+							res.token = token;
+							callback(null, Output.create(1000, res));
+						}
 
-			}
-		});
+					});
+
+				}
+			});
+		}
+		else {
+			callback(null, Output.create(1004, {}));
+		}
+
 	}
 	else {
 		callback(null, Output.create(1002, {}));
@@ -48,47 +55,50 @@ function logout(input) {
 
 function signup(input, callback) {
 
-
 	console.log("signup: input: " + JSON.stringify(input));
 	if (Validate.checkParam(input, ['phonenumber', 'password'])) {
 
-		UserDao.findOne({ phonenumber: input.phonenumber }, function (err, res) {
+		if (Validate.checkPhonenumber(input.phonenumber) && Validate.checkPassword(input.password)) {
 
-			if (err) {
-				console.log(err);
+			UserDao.findOne({ phonenumber: input.phonenumber }, function (err, res) {
 
-				callback(err, Output.create(1001, {}));
-			}
-			else if (Validate.isEmpty(res)) {
-				UserDao.save({ phonenumber: input.phonenumber, password: input.password, uuid: input.uuid }, function (err, res) {
-					if (err) {
-						//Exception error
-						callback(err, Output.create(9999));
-					}
-					else {
-						//OK
-						callback(null, Output.create(1000));
-					}
+				if (err) {
+					console.log(err);
 
+					callback(err, Output.create(1001, {}));
+				}
+				else if (Validate.isEmpty(res)) {
+					var code = RandomCode();
 
-				});
-			}
-			else {
-				//User existed
-				callback(null, Output.create(9996));
-			}
-		});
+					UserDao.save({ phonenumber: input.phonenumber, password: input.password, uuid: input.uuid, verified: false, VerifyCode: code, CreateCodeTime: Date.now(), active: -1 }, function (err, res) {
+						if (err) {
+							//Exception error
+							callback(err, Output.create(9999));
+						}
+						else {
+							//OK
+							callback(null, Output.create(1000));
+							SMS.send(input.phonenumber, "Verify code: " + code);
+							
+						}
+					});
+				}
+				else {
+					//User existed
+					callback(null, Output.create(9996));
+				}
+			});
+		}
+		else{
+			callback(null, Output.create(1004));
+		}
 
 	}
 	else {
 		callback(null, Output.create(1002));
 	}
-
-
-
-
-
 }
+
 function signup_social(input) {
 	var out;
 	return out;
@@ -97,25 +107,91 @@ function signed_social(input) {
 	var out;
 	return out;
 }
-function sms_verify(input) {
-	var out;
-	return out;
+function sms_verify(input, callback) {
+	if (Validate.checkParam(input, ['phonenumber', 'code_verify'])){
+		if (Validate.checkPhonenumber(input.phonenumber)){
+			var phonenumber = input.phonenumber;
+			var code_verify = parseInt(input.code_verify);
+
+			UserDao.checkVerifyCode(phonenumber, code_verify, function(err, res){
+				if (err){
+					callback(null, Output.create(1001));
+				}else if (res == true){
+					UserDao.findByPhonenumber(phonenumber, {id: 1, active: 1, password: 1}, function(err, res){
+						console.log("sms_verify: res: " + JSON.stringify(res));
+						
+						if (err || Validate.isEmpty(res)){
+							callback(null, Output.create(1001));
+						}else{
+							var token = UserDao.getToken(input.phonenumber, res.password);
+				
+							callback(null, Output.create(1000, {id: res.id, token: token, active: res.active}));
+
+							UserDao.updateByPhonenumber(input.phonenumber, {verified: true}, function(err, res){});
+						}
+					});
+				}else{
+
+				}
+			});
+		}else{
+			callback(null, Output.create(1004));
+		}
+	}else{
+		callback(null, Output.create(1002));
+	}
 }
-function resend_sms_verify(input) {
-	var out;
-	return out;
+function resend_sms_verify(input, callback) {
+	if (Validate.checkParam(input, ['phonenumber'])){
+		if (Validate.checkPhonenumber(input.phonenumber)){
+			var code = RandomCode();
+			UserDao.createVerifyCode(input.phonenumber, code, function(err, res){
+				if (err || res == false){
+					callback(null, Output.create(1001));
+				}else{
+					callback(null, Output.create(1000));
+					SMS.send(input.phonenumber, "Verify code: " + code);
+					
+				}
+			});
+		}else{
+			callback(null, Output.create(1004));
+		}
+	}else{
+		callback(null, Output.create(1002));
+	}
 }
 function create_code_reset_password(input, callback) {
 	if (Validate.checkParam(input, ['phonenumber'])) {
-		const start = 100000, end = 999999;
-		var code = Math.floor(Math.random() * (1 + end - start) ) + start;
-		
-		UserDao.createResetPasswordCode(input.phonenumber, code, function(err, res){
-			if (err || res == false){
+		// const start = 100000, end = 999999;
+		// var code = Math.floor(Math.random() * (1 + end - start)) + start;
+		var code = RandomCode();
+
+		UserDao.createVerifyCode(input.phonenumber, code, function (err, res) {
+			if (err || res == false) {
 				callback(err, Output.create(1005));
 			}
-			else{
+			else {
 				callback(null, Output.create(1000));
+
+				SMS.send(input.phonenumber, "Reset password code: " + code);
+
+				// var PhoneNumber = require('awesome-phonenumber');
+				// var pn = new PhoneNumber(input.phonenumber, 'VN');
+				// var internationalPhonenumber = pn.getNumber();
+
+				// var twilio = require('twilio');
+				// var accountSid = 'ACdaa80ab0aaaa360bc8242bbf1474c8b7'; // Your Account SID from www.twilio.com/console
+				// var authToken = 'adf70bb174102f87c1bb22218949b30f';   // Your Auth Token from www.twilio.com/console
+
+				// var twilio = require('twilio');
+				// var client = new twilio(accountSid, authToken);
+
+				// client.messages.create({
+				// 	body: 'Reset password code: ' + code,
+				// 	to: internationalPhonenumber,  // Text this number
+				// 	from: '+18543335046' // From a valid Twilio number
+				// });
 			}
 		});
 	}
@@ -125,12 +201,12 @@ function create_code_reset_password(input, callback) {
 }
 function check_code_reset_password(input, callback) {
 	if (Validate.checkParam(input, ['phonenumber', 'reset_code'])) {
-		
-		UserDao.checkResetPasswordCode(input.phonenumber, input.reset_code, function(err, res){
-			if (err || res == false){
+
+		UserDao.checkResetPasswordCode(input.phonenumber, input.reset_code, function (err, res) {
+			if (err || res == false) {
 				callback(err, Output.create(1005));
 			}
-			else{
+			else {
 				callback(null, Output.create(1000));
 			}
 		});
@@ -695,6 +771,8 @@ var UserDao = require('./dao/UserDao');
 
 var Validate = require('./util/Validate');
 var Output = require('./util/Output');
+var SMS = require('./util/SMS');
+var RandomCode = require('./util/RandomCode');
 
 var http = require('http');
 var mime = require('./mime');

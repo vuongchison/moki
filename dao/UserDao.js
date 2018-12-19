@@ -155,13 +155,13 @@ class UserDao {
 		return res;
 	}
 
-	static getToken(username, password){
-		var token = jwt.sign({username: username, password: password});
+	static getToken(phonenumber, password){
+		var token = jwt.sign({phonenumber: phonenumber, password: password});
 		return token;
 	}
 
-	static createResetPasswordCode(phonenumber, code, callback){
-		usersCollection.findOneAndUpdate({phonenumber: phonenumber}, {$set: {ResetPasswordCode: code, CreateResetPassswordCodeTime: Date.now()}}, function(err, res){
+	static createVerifyCode(phonenumber, code, callback){
+		usersCollection.findOneAndUpdate({phonenumber: phonenumber}, {$set: {VerifyCode: code, CreateCodeTime: Date.now()}}, function(err, res){
 			if (err || Validate.isEmpty(res))
 			{
 				callback(err, false);
@@ -172,13 +172,13 @@ class UserDao {
 		});
 	}
 
-	static checkResetPasswordCode(phonenumber, code, callback){
-		usersCollection.findOne({phonenumber: phonenumber, ResetPasswordCode: code}, { CreateResetPassswordCodeTime: 1}, function(err, res){
+	static checkVerifyCode(phonenumber, code, callback){
+		usersCollection.findOne({phonenumber: phonenumber, VerifyCode: code}, { CreateCodeTime: 1}, function(err, res){
 			if (err || Validate.isEmpty(res)){
 				callback(err, false);
 			}
 			else{
-				if ((res.CreateResetPassswordCodeTime - Date.now()) / 1000 <= 60 ){
+				if ((res.CreateCodeTime - Date.now()) / 1000 <= 60*5 ){
 					callback(null, true);
 				}
 				else{
@@ -188,6 +188,17 @@ class UserDao {
 		});
 	}
 
+	static updateByPhonenumber(phonenumber, values, callback){
+		usersCollection.findOneAndUpdate({phonenumber: phonenumber}, {$set: values}, function(err, res){
+			if (err || Validate.isEmpty(res))
+			{
+				callback(err, false);
+			}
+			else{
+				callback(null, true);
+			}
+		});
+	}
 	
 }
 
