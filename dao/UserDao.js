@@ -195,7 +195,7 @@ class UserDao {
 				callback(err, false);
 			}
 			else{
-				callback(null, true);
+				callback(null, res);
 			}
 		});
 	}

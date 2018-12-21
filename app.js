@@ -1,7 +1,7 @@
 // import {UserDao} from 'dao/UserDao.js';
 
 
-var root = "website";
+var root = "D:\\Eclipse\\moki\\website";
 var errorPage = 'error.html';
 
 
@@ -79,7 +79,7 @@ function signup(input, callback) {
 							//OK
 							callback(null, Output.create(1000));
 							SMS.send(input.phonenumber, "Verify code: " + code);
-							
+
 						}
 					});
 				}
@@ -89,7 +89,7 @@ function signup(input, callback) {
 				}
 			});
 		}
-		else{
+		else {
 			callback(null, Output.create(1004));
 		}
 
@@ -108,56 +108,56 @@ function signed_social(input) {
 	return out;
 }
 function sms_verify(input, callback) {
-	if (Validate.checkParam(input, ['phonenumber', 'code_verify'])){
-		if (Validate.checkPhonenumber(input.phonenumber)){
+	if (Validate.checkParam(input, ['phonenumber', 'code_verify'])) {
+		if (Validate.checkPhonenumber(input.phonenumber)) {
 			var phonenumber = input.phonenumber;
 			var code_verify = parseInt(input.code_verify);
 
-			UserDao.checkVerifyCode(phonenumber, code_verify, function(err, res){
-				if (err){
+			UserDao.checkVerifyCode(phonenumber, code_verify, function (err, res) {
+				if (err) {
 					callback(null, Output.create(1001));
-				}else if (res == true){
-					UserDao.findByPhonenumber(phonenumber, {id: 1, active: 1, password: 1}, function(err, res){
+				} else if (res == true) {
+					UserDao.findByPhonenumber(phonenumber, { id: 1, active: 1, password: 1 }, function (err, res) {
 						console.log("sms_verify: res: " + JSON.stringify(res));
-						
-						if (err || Validate.isEmpty(res)){
-							callback(null, Output.create(1001));
-						}else{
-							var token = UserDao.getToken(input.phonenumber, res.password);
-				
-							callback(null, Output.create(1000, {id: res.id, token: token, active: res.active}));
 
-							UserDao.updateByPhonenumber(input.phonenumber, {verified: true}, function(err, res){});
+						if (err || Validate.isEmpty(res)) {
+							callback(null, Output.create(1001));
+						} else {
+							var token = UserDao.getToken(input.phonenumber, res.password);
+
+							callback(null, Output.create(1000, { id: res.id, token: token, active: res.active }));
+
+							UserDao.updateByPhonenumber(input.phonenumber, { verified: true }, function (err, res) { });
 						}
 					});
-				}else{
+				} else {
 
 				}
 			});
-		}else{
+		} else {
 			callback(null, Output.create(1004));
 		}
-	}else{
+	} else {
 		callback(null, Output.create(1002));
 	}
 }
 function resend_sms_verify(input, callback) {
-	if (Validate.checkParam(input, ['phonenumber'])){
-		if (Validate.checkPhonenumber(input.phonenumber)){
+	if (Validate.checkParam(input, ['phonenumber'])) {
+		if (Validate.checkPhonenumber(input.phonenumber)) {
 			var code = RandomCode();
-			UserDao.createVerifyCode(input.phonenumber, code, function(err, res){
-				if (err || res == false){
+			UserDao.createVerifyCode(input.phonenumber, code, function (err, res) {
+				if (err || res == false) {
 					callback(null, Output.create(1001));
-				}else{
+				} else {
 					callback(null, Output.create(1000));
 					SMS.send(input.phonenumber, "Verify code: " + code);
-					
+
 				}
 			});
-		}else{
+		} else {
 			callback(null, Output.create(1004));
 		}
-	}else{
+	} else {
 		callback(null, Output.create(1002));
 	}
 }
@@ -215,9 +215,25 @@ function check_code_reset_password(input, callback) {
 		callback(null, Output.create(1002));
 	}
 }
-function reset_password(input) {
-	var out;
-	return out;
+function reset_password(input, callback) {
+	if (Validate.checkParam(input, ['phonenumber', 'password'])) {
+		var phonenumber = input.phonenumber, password = input.password;
+		if (Validate.checkPhonenumber(phonenumber) && Validate.checkPassword(password)) {
+			UserDao.updateByPhonenumber(phonenumber, { password: password }, function (err, res) {
+				if (err || res == false) {
+					callback(null, Output.create(1001));
+				} else {
+					var token = UserDao.getToken(input.phonenumber, res.password);
+
+					callback(null, Output.create(1000, { id: res.id, token: token, avatar: res.avatar || null }));
+				}
+			});
+		} else {
+			callback(null, Output.create(1004));
+		}
+	} else {
+		callback(null, Output.create(1002));
+	}
 }
 function get_invite_code(input) {
 	var out;
@@ -590,7 +606,7 @@ function get_key_voisearch(input) {
 
 
 function post(req, res) {
-	console.log("POST " + req.url);
+	console.log("POST " + req.originalUrlurl);
 
 	var api = {
 		'/api/login': login,
@@ -696,24 +712,30 @@ function post(req, res) {
 		'/api/get_key_voisearch': get_key_voisearch
 	};
 
-	var apiFun = api[req.url];
+	var apiFun = api[req.originalUrl];
 	if (apiFun != null) {
-		let body = '';
-		req.on('data', chunk => {
-			body += chunk.toString(); // convert Buffer to string
-		});
-		req.on('end', () => {
-			console.log(body);
-			apiFun(JSON.parse(body), function (err, result) {
-				result = JSON.stringify(result);
-				res.writeHead(200, { 'Content-Type': mime.getType('.JSON'), 'Content-Length': result.length });
-				res.end(result);
-			});
-
-
-		});
+		// let body = '';
+		// req.on('data', chunk => {
+		// 	body += chunk.toString(); // convert Buffer to string
+		// });
+		// req.on('end', () => {
+		// 	console.log(body);
+		// 	apiFun(JSON.parse(body), function (err, result) {
+		// 		result = JSON.stringify(result);
+		// 		res.writeHead(200, { 'Content-Type': mime.getType('.JSON'), 'Content-Length': result.length });
+		// 		res.end(result);
+		// 	});
+		// });
 		// console.log(req);
 
+		apiFun(req.body, function(err, result){
+			// result = JSON.stringify(result);
+			if (err){
+				console.log(err);
+			}
+			res.status(200);
+			res.json(result);
+		});
 
 	}
 	else {
@@ -736,26 +758,14 @@ function get(req, res) {
 	}
 	else {
 		filePath = path.join(root, req.url);
-		//		pathName += req.url.pathname;
 	}
-
-	//	console.log(filePath);
 
 	if (!fileSystem.existsSync(filePath)) {
 		filePath = path.join(root, errorPage);
 	}
 
 	var stat = fileSystem.statSync(filePath);
-
-	// console.log(res.type("html"));
-
-	// console.log(path.extname(filePath));
-	// res.type(path.extname(filePath))
-
-	//	console.log(mime.getType(filePath));
 	res.writeHead(200, { 'Content-Type': mime.getType(filePath), 'Content-Length': stat.size });
-
-	//	res.writeHead(200, {'Content-Type': 'text/plain'});
 
 	var readStream = fileSystem.createReadStream(filePath);
 	readStream.pipe(res);
@@ -774,21 +784,102 @@ var Output = require('./util/Output');
 var SMS = require('./util/SMS');
 var RandomCode = require('./util/RandomCode');
 
-var http = require('http');
 var mime = require('./mime');
-http.createServer(function handler(req, res) {
 
-	if (req.method === "GET") {
-		get(req, res);
-		//		res.writeHead(200, {'Content-Type': 'text/plain'});
-		//		res.end('Hello World\n');
+
+// var https = require('https');
+// https.createServer(function handler(req, res) {
+
+// 	if (req.method === "GET") {
+// 		get(req, res);
+// 		//		res.writeHead(200, {'Content-Type': 'text/plain'});
+// 		//		res.end('Hello World\n');
+// 	}
+// 	else if (req.method === "POST") {
+// 		post(req, res);
+// 	}
+// }).listen(8080);
+// console.log('Server running at :8080');
+
+
+// var fs = require('fs');
+// var http = require('http');
+// var https = require('https');
+// var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+// var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+
+// var credentials = {key: privateKey, cert: certificate};
+// var express = require('express');
+// var app = express();
+
+// // your express configuration here
+
+// var httpServer = http.createServer(app);
+// var httpsServer = https.createServer(credentials, app);
+
+// httpServer.listen(8080);
+// httpsServer.listen(8443);
+// app.get('/',function(req,res){console.log("get \\");});
+
+
+var https = require('https');
+var http = require('http');
+var pem = require('pem');
+var express = require('express');
+var bodyParser = require('body-parser');
+
+pem.config({
+	pathOpenSSL: 'C:\\Program Files\\OpenSSL-Win64\\bin\\openssl.exe'
+});
+pem.createCertificate({ days: 365, selfSigned: true }, function (err, keys) {
+	if (err) {
+		throw err;
 	}
-	else if (req.method === "POST") {
-		post(req, res);
-	}
-}).listen(80, '127.0.0.1');
-console.log('Server running at http://127.0.0.1:80/');
+	  console.log(keys);
+
+	var app = express();
+	app.use(bodyParser.json()); // for parsing application/json
+	app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+	app.get('/', function (req, res) {
+		var path = require("path"),
+			fileSystem = require("fs"),
+			filePath;
+
+		console.log("GET " + req.originalUrl);
+
+		filePath = path.join(root, "index.html");
 
 
+		if (!fileSystem.existsSync(filePath)) {
+			filePath = path.join(root, errorPage);
+		}
+		console.log(filePath);
+		res.status(200);
+		res.sendFile(filePath);
+	});
+
+	app.get('/*', function (req, res) {
+		var path = require("path"),
+			fileSystem = require("fs"),
+			filePath;
+
+		console.log("GET " + req.path);
+
+		filePath = path.join(root, req.path);
 
 
+		if (!fileSystem.existsSync(filePath)) {
+			filePath = path.join(root, errorPage);
+		}
+
+		res.status(200);
+		res.sendFile(filePath);
+	});
+
+	app.post('/api/*', post);
+
+	http.createServer(app).listen(80);
+	https.createServer({ key: keys.serviceKey, cert: keys.certificate }, app).listen(443);
+	
+});
