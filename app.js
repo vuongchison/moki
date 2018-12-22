@@ -25,6 +25,9 @@ function login(input, callback) {
 								res.avatar = '-1';
 							var token = UserDao.getToken(input.phonenumber, input.password);
 							res.token = token;
+							
+							ssn.phonenumber = input.phonenumber;
+							console.log("ssn: phonenumber: " + ssn.phonenumber);
 							callback(null, Output.create(1000, res));
 						}
 
@@ -606,7 +609,7 @@ function get_key_voisearch(input) {
 
 
 function post(req, res) {
-	console.log("POST " + req.originalUrlurl);
+	console.log("POST " + req.originalUrl);
 
 	var api = {
 		'/api/login': login,
@@ -727,10 +730,10 @@ function post(req, res) {
 		// 	});
 		// });
 		// console.log(req);
-
-		apiFun(req.body, function(err, result){
+		ssn = req.session; console.log('phonenumber: ' + ssn.phonenumber);
+		apiFun(req.body, function (err, result) {
 			// result = JSON.stringify(result);
-			if (err){
+			if (err) {
 				console.log(err);
 			}
 			res.status(200);
@@ -826,7 +829,9 @@ var https = require('https');
 var http = require('http');
 var pem = require('pem');
 var express = require('express');
+var session = require('express-session');
 var bodyParser = require('body-parser');
+var ssn;
 
 pem.config({
 	pathOpenSSL: 'C:\\Program Files\\OpenSSL-Win64\\bin\\openssl.exe'
@@ -835,11 +840,14 @@ pem.createCertificate({ days: 365, selfSigned: true }, function (err, keys) {
 	if (err) {
 		throw err;
 	}
-	  console.log(keys);
+	console.log(keys);
 
 	var app = express();
+	app.use(session({ secret: 'MOKI' }));
 	app.use(bodyParser.json()); // for parsing application/json
 	app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+	
 
 	app.get('/', function (req, res) {
 		var path = require("path"),
@@ -881,5 +889,5 @@ pem.createCertificate({ days: 365, selfSigned: true }, function (err, keys) {
 
 	http.createServer(app).listen(80);
 	https.createServer({ key: keys.serviceKey, cert: keys.certificate }, app).listen(443);
-	
+
 });
