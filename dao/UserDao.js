@@ -30,32 +30,32 @@ class UserDao {
 		return usersCollection;
 	}
 
-	static findOne(query, callback){
-		// console.log("usersCollection: " + this.usersCollection);
+	// static findOne(query, callback){
+	// 	// console.log("usersCollection: " + this.usersCollection);
 	
-		usersCollection.findOne(query, function(err, res){
+	// 	usersCollection.findOne(query, function(err, res){
 			
-			if (res == null)
-			{
-				res = {};
-			}
-			// console.log("res: " + res);
-			callback(err, res);
-		});
-	}
+	// 		if (res == null)
+	// 		{
+	// 			res = {};
+	// 		}
+	// 		// console.log("res: " + res);
+	// 		callback(err, res);
+	// 	});
+	// }
 
-	static findOne(query, projection, callback) {
-		usersCollection.findOne(query, projection, function(err, res){
+	// static findOne(query, projection, callback) {
+	// 	usersCollection.findOne(query, projection, function(err, res){
 			
-			if (res == null)
-			{
-				res = {};
-			}
-			// console.log("res: " + res);
-			callback(err, res);
+	// 		if (res == null)
+	// 		{
+	// 			res = {};
+	// 		}
+	// 		// console.log("res: " + res);
+	// 		callback(err, res);
 		
-		});
-	}
+	// 	});
+	// }
 
 	static findByPhonenumber(phonenumber, projection, callback){
 		usersCollection.findOne({phonenumber: phonenumber}, projection, function(err, res){
@@ -81,31 +81,31 @@ class UserDao {
 
 	
 
-	static find(query, callback) {
-		usersCollection.find(query).toArray( function(err, res){
+	// static find(query, callback) {
+	// 	usersCollection.find(query).toArray( function(err, res){
 			
-			if (res == null)
-			{
-				res = [];
-			}
-			// console.log("res: " + res);
-			callback(err, res);
+	// 		if (res == null)
+	// 		{
+	// 			res = [];
+	// 		}
+	// 		// console.log("res: " + res);
+	// 		callback(err, res);
 		
-		});
-	}
+	// 	});
+	// }
 
-	static find(query, projection, callback) {
-		usersCollection.find(query, projection).toArray( function(err, res){
+	// static find(query, projection, callback) {
+	// 	usersCollection.find(query, projection).toArray( function(err, res){
 			
-			if (res == null)
-			{
-				res = [];
-			}
-			// console.log("res: " + res);
-			callback(err, res);
+	// 		if (res == null)
+	// 		{
+	// 			res = [];
+	// 		}
+	// 		// console.log("res: " + res);
+	// 		callback(err, res);
 		
-		});
-	}
+	// 	});
+	// }
 	
 
 	static checkLoginByUsername(username, password, callback) {

@@ -25,7 +25,7 @@ function login(input, callback) {
 								res.avatar = '-1';
 							var token = UserDao.getToken(input.phonenumber, input.password);
 							res.token = token;
-							
+
 							ssn.phonenumber = input.phonenumber;
 							console.log("ssn: phonenumber: " + ssn.phonenumber);
 							callback(null, Output.create(1000, res));
@@ -46,24 +46,25 @@ function login(input, callback) {
 	}
 }
 
-function login_social(input) {
-	var out;
-	return out;
+function login_social(input, callback) {
+
+
 }
 
-function logout(input) {
-	var out;
-	return out;
+function logout(input, callback) {
+	ssn.destroy();
+	callback(null, Output.create(1000));
+
 }
 
 function signup(input, callback) {
 
-	console.log("signup: input: " + JSON.stringify(input));
+	console.log("signup: input: " + JSON.stringify(input, callback));
 	if (Validate.checkParam(input, ['phonenumber', 'password'])) {
 
 		if (Validate.checkPhonenumber(input.phonenumber) && Validate.checkPassword(input.password)) {
 
-			UserDao.findOne({ phonenumber: input.phonenumber }, function (err, res) {
+			UserDao.findByPhonenumber({ phonenumber: input.phonenumber },{}, function (err, res) {
 
 				if (err) {
 					console.log(err);
@@ -102,13 +103,13 @@ function signup(input, callback) {
 	}
 }
 
-function signup_social(input) {
-	var out;
-	return out;
+function signup_social(input, callback) {
+
+
 }
-function signed_social(input) {
-	var out;
-	return out;
+function signed_social(input, callback) {
+
+
 }
 function sms_verify(input, callback) {
 	if (Validate.checkParam(input, ['phonenumber', 'code_verify'])) {
@@ -238,373 +239,456 @@ function reset_password(input, callback) {
 		callback(null, Output.create(1002));
 	}
 }
-function get_invite_code(input) {
-	var out;
-	return out;
-}
-function get_categories(input) {
-	var out;
-	return out;
-}
-function get_list_products(input) {
-	var out;
-	return out;
-}
-function get_products(input) {
-	var out;
-	return out;
-}
-function add_products(input) {
-	var out;
-	return out;
-}
-function get_key_add_products(input) {
-	var out;
-	return out;
-}
-function edit_products(input) {
-	var out;
-	return out;
-}
-function del_products(input) {
-	var out;
-	return out;
-}
-function get_comment_products(input) {
-	var out;
-	return out;
-}
-function set_comment_products(input) {
-	var out;
-	return out;
-}
-function report_products(input) {
-	var out;
-	return out;
-}
-function like_products(input) {
-	var out;
-	return out;
-}
-function buy_products(input) {
-	var out;
-	return out;
-}
-function search(input) {
-	var out;
-	return out;
-}
-function save_search(input) {
-	var out;
-	return out;
-}
-function get_list_saved_search(input) {
-	var out;
-	return out;
-}
-function get_list_news(input) {
-	var out;
-	return out;
-}
-function get_news(input) {
-	var out;
-	return out;
-}
-function get_my_likes(input) {
-	var out;
-	return out;
-}
-function get_user_listings(input) {
-	var out;
-	return out;
-}
-function get_my_purchases(input) {
-	var out;
-	return out;
-}
-function get_notification(input) {
-	var out;
-	return out;
-}
-function get_user_info(input) {
-	var out;
-	return out;
-}
-function set_user_info(input) {
-	var out;
-	return out;
-}
-function get_rates(input) {
-	var out;
-	return out;
-}
-function set_rates(input) {
-	var out;
-	return out;
-}
-function get_list_blocks(input) {
-	var out;
-	return out;
-}
-function blocks(input) {
-	var out;
-	return out;
-}
-function get_list_sizes(input) {
-	var out;
-	return out;
-}
-function get_list_brands(input) {
-	var out;
-	return out;
-}
-function get_list_buyer_products(input) {
-	var out;
-	return out;
-}
-function set_accept_buyer(input) {
-	var out;
-	return out;
-}
-function set_confirm_purchases(input) {
-	var out;
-	return out;
-}
-function search_user(input) {
-	var out;
-	return out;
-}
-function set_follow_user(input) {
-	var out;
-	return out;
-}
-function get_ship_from(input) {
-	var out;
-	return out;
-}
-function change_state_purchase(input) {
-	var out;
-	return out;
-}
-function get_list_purchase(input) {
-	var out;
-	return out;
-}
-function request_withdraw(input) {
-	var out;
-	return out;
-}
-function cancel_withdraw(input) {
-	var out;
-	return out;
-}
-function get_balance_history(input) {
-	var out;
-	return out;
-}
-function get_list_followed(input) {
-	var out;
-	return out;
-}
-function get_list_following(input) {
-	var out;
-	return out;
-}
-function get_deposit_history(input) {
-	var out;
-	return out;
-}
-function change_password(input) {
-	var out;
-	return out;
-}
-function get_push_setting(input) {
-	var out;
-	return out;
-}
-function set_push_setting(input) {
-	var out;
-	return out;
-}
-function get_order_status(input) {
-	var out;
-	return out;
-}
-function change_info_after_signup(input) {
-	var out;
-	return out;
-}
-function get_current_balance(input) {
-	var out;
-	return out;
-}
-function get_user_setting(input) {
-	var out;
-	return out;
-}
-function set_user_setting(input) {
-	var out;
-	return out;
-}
-function check_new_version(input) {
-	var out;
-	return out;
-}
-function set_devtoken(input) {
-	var out;
-	return out;
-}
-function get_purchase(input) {
-	var out;
-	return out;
-}
-function edit_purchase(input) {
-	var out;
-	return out;
-}
-function get_deposit_detail(input) {
-	var out;
-	return out;
-}
-function check_password(input) {
-	var out;
-	return out;
-}
-function get_rating_data(input) {
-	var out;
-	return out;
-}
-function login_admin(input) {
-	var out;
-	return out;
-}
-function get_ship_fee(input) {
-	var out;
-	return out;
-}
-function set_conversation(input) {
-	var out;
-	return out;
-}
-function set_conversation(input) {
-	var out;
-	return out;
-}
-function get_list_order_address(input) {
-	var out;
-	return out;
-}
-function add_order_address(input) {
-	var out;
-	return out;
-}
-function edit_order_address(input) {
-	var out;
-	return out;
-}
-function delete_order_address(input) {
-	var out;
-	return out;
-}
-function accept_offers(input) {
-	var out;
-	return out;
-}
-function set_offers(input) {
-	var out;
-	return out;
-}
-function sent_sms_withdraw(input) {
-	var out;
-	return out;
-}
-function get_list_conversation(input) {
-	var out;
-	return out;
-}
-function get_conversation_detail(input) {
-	var out;
-	return out;
-}
-function get_list_user_bank(input) {
-	var out;
-	return out;
-}
-function add_user_bank(input) {
-	var out;
-	return out;
-}
-function edit_user_bank(input) {
-	var out;
-	return out;
-}
-function delete_user_bank(input) {
-	var out;
-	return out;
-}
-function check_promotion_code(input) {
-	var out;
-	return out;
-}
-function get_list_campaigns(input) {
-	var out;
-	return out;
-}
-function check_new_items(input) {
-	var out;
-	return out;
-}
-function set_user_contact(input) {
-	var out;
-	return out;
-}
-function set_read_message(input) {
-	var out;
-	return out;
-}
-function upload_video(input) {
-	var out;
-	return out;
-}
-function set_read_notification(input) {
-	var out;
-	return out;
-}
-function get_list_charity_campaign(input) {
-	var out;
-	return out;
-}
-function get_charity_campaign(input) {
-	var out;
-	return out;
-}
-function get_list_product_donated(input) {
-	var out;
-	return out;
-}
-function get_list_member_donated(input) {
-	var out;
-	return out;
-}
-function get_user_history_donate(input) {
-	var out;
-	return out;
-}
-function donates(input) {
-	var out;
-	return out;
-}
-function get_rank_donate(input) {
-	var out;
-	return out;
-}
-function cancel_donate(input) {
-	var out;
-	return out;
-}
-function get_key_voisearch(input) {
-	var out;
-	return out;
+function get_invite_code(input, callback) {
+	//bỏ
+}
+
+function get_categories(input, callback) {
+	// thì giả sử tất cả categories không có danh mục con ở bên trong (has_child = 0), và không có weight (require_weight = 0), has_brand = 1. 
+	//Trường sort thì bỏ đi
+
+	CategoryDao.find({}, { id: 1, name: 1 }, function (err, res) {
+		if (err) {
+			callback(err, Output.create(1001));
+		}
+		else {
+			res = res || [];
+			for (var i = 0, l = res.length; i < l; i++) {
+				res[i]['has_child'] = '0';
+				res[i]['require_weight'] = '0';
+				res[i]['has_brand'] = '1';
+			}
+			callback(null, Output.create(1000, res));
+		}
+	});
+
+
+}
+function get_list_products(input, callback) {
+	// cần bỏ đi các tham số input sau: price_min, price_max, seller_id, in_campaign, order, longtitude, lattitude, keyword
+
+	if (Validate.checkParam(input, ['index', 'count'])) {
+		var index = parseInt(input.index);
+		var count = parseInt(input.count);
+		console.log("input: " + JSON.stringify(input));
+		var query = {};
+		if (input.category_id)
+			query['category.id'] = (input.category_id);
+		if (input.brand_id)
+			query['brand.id'] = (input.brand_id);
+		if (input.product_size_id)
+			query['size.id'] = (input.product_size_id);
+		if (input.condition)
+			query['condition'] = input.condition;
+
+		ProductDao.find(query, {_id: 0, id: 1, name: 1, image: 1, video: 1, price: 1, price_percent: 1, brand: 1, described: 1, created: 1, like: 1, comment: 1, state: 1 }, function (err, res) {
+			if (err) {
+				callback(err, Output.create(1001));
+			}
+			else {
+				//sắp xếp theo ngày tạo (mới -> cũ)
+				res.sort((a, b) => - parseInt(a.created) + parseInt(b.created));
+
+				// console.log("res: " + JSON.stringify(res));
+
+				var last_index = -1;
+				if (input.last_id) {
+					last_index = res.findIndex((i) => (i.id == input.last_id));
+				}
+				console.log('last_index: ' + last_index);
+				if (index > res.length - 1){
+					callback(null, Output.create(1000));
+				}
+				else if (index >= last_index + 1) {
+					//không có sản phẩm mới đăng hoặc lần đầu get_list_products
+
+					var result = res.slice(index, index + count);
+					// console.log("result: " + result);
+					callback(null, Output.create(1000, { products: result, new_items: 0, last_id: result[result.length - 1]['id'] }));
+
+				} else {
+					//có sản phẩm mới đăng
+					var result = [];
+					var first_index = last_index - index + 1; //product đầu tiên đã get
+					var c = 0;
+
+					for (var i = first_index - 1; c < count && i >= 0; i-- , c++) {
+						result.push(res[i]);
+					}
+
+					for (var i = last_index + 1, l = res.length; c < count && i < l; i++ , c++) {
+						result.push(res[i]);
+					}
+
+					callback(null, Output.create(1000, { products: result, new_items: first_index, last_id: result[result.length - 1].id }));
+
+				}
+
+			}
+		});
+
+
+	}
+	else {
+		callback(null, Output.create(1002));
+	}
+
+}
+function get_products(input, callback) {
+	// bỏ các trường price_new, modified, best_offers, can_buy, product_waiting_rate, seller_vacation_mode, offers, allow_offer, auto_accept, messages (nằm trong data)
+
+}
+function add_products(input, callback) {
+	// Trường (input) key của API add_product bỏ, price_new, allow_offer, auto_accept bỏ. Trả về url để người dùng có thể share sản phẩm. Trường thumb chỉ cần nếu client trước đó có gọi api upload_video. Trường image, video phải gửi mảng byte lên.
+
+}
+function get_key_add_products(input, callback) {
+	//bỏ
+
+}
+function edit_products(input, callback) {
+
+
+}
+function del_products(input, callback) {
+
+
+}
+function get_comment_products(input, callback) {
+
+
+}
+function set_comment_products(input, callback) {
+
+
+}
+function report_products(input, callback) {
+
+
+}
+function like_products(input, callback) {
+
+
+}
+function buy_products(input, callback) {
+	//bỏ
+
+}
+function search(input, callback) {
+
+
+}
+function save_search(input, callback) {
+
+
+}
+function get_list_saved_search(input, callback) {
+
+
+}
+function get_list_news(input, callback) {
+
+
+}
+function get_news(input, callback) {
+
+
+}
+function get_my_likes(input, callback) {
+
+
+}
+function get_user_listings(input, callback) {
+
+
+}
+function get_my_purchases(input, callback) {
+
+
+}
+function get_notification(input, callback) {
+	//bỏ
+
+}
+function get_user_info(input, callback) {
+
+
+}
+function set_user_info(input, callback) {
+
+
+}
+function get_rates(input, callback) {
+
+
+}
+function set_rates(input, callback) {
+
+
+}
+function get_list_blocks(input, callback) {
+
+
+}
+function blocks(input, callback) {
+
+
+}
+function get_list_sizes(input, callback) {
+
+
+}
+function get_list_brands(input, callback) {
+
+
+}
+function get_list_buyer_products(input, callback) {
+
+
+}
+function set_accept_buyer(input, callback) {
+
+
+}
+function set_confirm_purchases(input, callback) {
+
+
+}
+function search_user(input, callback) {
+
+
+}
+function set_follow_user(input, callback) {
+
+
+}
+function get_ship_from(input, callback) {
+
+
+}
+function change_state_purchase(input, callback) {
+
+
+}
+function get_list_purchase(input, callback) {
+
+
+}
+function request_withdraw(input, callback) {
+
+
+}
+function cancel_withdraw(input, callback) {
+
+
+}
+function get_balance_history(input, callback) {
+
+
+}
+function get_list_followed(input, callback) {
+
+
+}
+function get_list_following(input, callback) {
+
+
+}
+function get_deposit_history(input, callback) {
+
+
+}
+function change_password(input, callback) {
+
+
+}
+function get_push_setting(input, callback) {
+
+
+}
+function set_push_setting(input, callback) {
+
+
+}
+function get_order_status(input, callback) {
+
+
+}
+function change_info_after_signup(input, callback) {
+
+
+}
+function get_current_balance(input, callback) {
+
+
+}
+function get_user_setting(input, callback) {
+
+
+}
+function set_user_setting(input, callback) {
+
+
+}
+function check_new_version(input, callback) {
+
+
+}
+function set_devtoken(input, callback) {
+
+
+}
+function get_purchase(input, callback) {
+
+
+}
+function edit_purchase(input, callback) {
+
+
+}
+function get_deposit_detail(input, callback) {
+
+
+}
+function check_password(input, callback) {
+
+
+}
+function get_rating_data(input, callback) {
+
+
+}
+function login_admin(input, callback) {
+
+
+}
+function get_ship_fee(input, callback) {
+
+
+}
+function set_conversation(input, callback) {
+
+
+}
+function set_conversation(input, callback) {
+
+
+}
+function get_list_order_address(input, callback) {
+
+
+}
+function add_order_address(input, callback) {
+
+
+}
+function edit_order_address(input, callback) {
+
+
+}
+function delete_order_address(input, callback) {
+
+
+}
+function accept_offers(input, callback) {
+
+
+}
+function set_offers(input, callback) {
+
+
+}
+function sent_sms_withdraw(input, callback) {
+
+
+}
+function get_list_conversation(input, callback) {
+
+
+}
+function get_conversation_detail(input, callback) {
+
+
+}
+function get_list_user_bank(input, callback) {
+
+
+}
+function add_user_bank(input, callback) {
+
+
+}
+function edit_user_bank(input, callback) {
+
+
+}
+function delete_user_bank(input, callback) {
+
+
+}
+function check_promotion_code(input, callback) {
+
+
+}
+function get_list_campaigns(input, callback) {
+
+
+}
+function check_new_items(input, callback) {
+
+
+}
+function set_user_contact(input, callback) {
+	//bỏ
+
+}
+function set_read_message(input, callback) {
+
+
+}
+function upload_video(input, callback) {
+	//không cần làm
+
+}
+function set_read_notification(input, callback) {
+	//bỏ
+
+}
+function get_list_charity_campaign(input, callback) {
+
+
+}
+function get_charity_campaign(input, callback) {
+
+
+}
+function get_list_product_donated(input, callback) {
+
+
+}
+function get_list_member_donated(input, callback) {
+
+
+}
+function get_user_history_donate(input, callback) {
+
+
+}
+function donates(input, callback) {
+
+
+}
+function get_rank_donate(input, callback) {
+
+
+}
+function cancel_donate(input, callback) {
+
+
+}
+function get_key_voisearch(input, callback) {
+
+
 }
 
 
@@ -780,7 +864,8 @@ function get(req, res) {
 
 
 var UserDao = require('./dao/UserDao');
-// var LoginDao = require('./dao/LoginDao');
+var CategoryDao = require('./dao/CategoryDao');
+var ProductDao = require('./dao/ProductDao');
 
 var Validate = require('./util/Validate');
 var Output = require('./util/Output');
@@ -847,7 +932,7 @@ pem.createCertificate({ days: 365, selfSigned: true }, function (err, keys) {
 	app.use(bodyParser.json()); // for parsing application/json
 	app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-	
+
 
 	app.get('/', function (req, res) {
 		var path = require("path"),
