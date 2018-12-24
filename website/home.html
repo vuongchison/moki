@@ -33,7 +33,7 @@
     </div>
     <div class="shadow">
         <div class="head">
-                <div class="container">
+                <div class="container" style="margin-bottom: 15px;">
                 <div class="row">
                         <div class="col-md-4">
                             <img src="img/logo_medium.png">
@@ -1777,6 +1777,20 @@ function showSlides() {
 
     </div> 
     <!-- kết thúc div cho phần foorter -->
+    <div class="scrollToTop" style="position: fixed;right: 5px;bottom: 100px;"><a href="#" class="btn btn-info btn-lg" style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
+    <span class="glyphicon glyphicon-chevron-up"></span>
+</a></div>
+<script type="text/javascript">
+    $(function(){
+$(window).scroll(function () {
+if ($(this).scrollTop() > 100) $(".scrollToTop").fadeIn();
+else $(".scrollToTop").fadeOut();
+});
+$(".scrollToTop").click(function () {
+$("body,html").animate({scrollTop: 0}, 800);
+});
+});
+</script>
     <div class="nhanvien">
            <a href="#" ><img src="img/chatbox-nv.png"/></a>
     </div>

@@ -30,6 +30,31 @@ return false;
 Return true;
 }
 </script>
+
+
+<!--
+<?php
+  if(isset($_POST['submit'])){
+     $captcha;
+     if(isset($_POST['g-recaptcha-response'])){
+        $captcha = $_POST['g-recaptcha-response'];
+     }
+     if(!$captcha){
+        echo "<h2>Hay xac nhan CAPTCHA</h2>";
+     }else{
+        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret6LfXa4QUAAAAAAjuz3zS0uIUKaUGR0JPuJLz0cD-&response=".$captcha."&remoteip=".$_SERVER['REMOTE_ADDR']);
+        if($response.success == false){
+           echo '<h2>SPAM!</h2>';
+        }else{
+           echo '<h2> Khong phai robot</h2>';
+        }
+     }
+  }
+?>
+-->
+
+
+<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl=vi"></script>
 </head>
 <body>
     <div class="tophead" style="background: url(img/bkg_top_header.png) bottom center repeat-y;color:#fff;height: 30px;">
@@ -52,7 +77,7 @@ Return true;
     </div>
     <div class="shadow">
         <div class="head">
-                <div class="container">
+                <div class="container" style="margin-bottom: 15px;">
                 <div class="row">
                         <div class="col-md-4">
                             <img src="img/logo_medium.png">
@@ -108,10 +133,10 @@ Return true;
     <div class="col-md-6" style="margin-left: -40px;">
       <div class="input password required" aria-required="true"><input name="data[User][password]" class="form-control" maxlength="30" placeholder="Xin vui lòng nhập mật khẩu" data-rule-required="true" data-msg-required="Vui lòng nhập mật khẩu" data-rule-lettersonly="true" data-msg-lettersonly="Vui lòng chỉ nhập chữ và số" data-rule-minlength="6" data-msg-minlength="Mật khẩu tối thiểu 6 ký tự" data-rule-maxlength="30" data-msg-maxlength="Mật khẩu tối đa 30 ký tự" type="password" id="UserPassword" required="required" aria-required="true"></div></div>
         </div>
-<div class="form-group" style="height: 50px;">
+<div class="form-group" style="height: 80px;">
      <div class="col-md-6 col-md-offset-3">
        <div class="">
-        <div class="g-recaptcha"></div>
+        <div class="g-recaptcha" data-sitekey="6LfXa4QUAAAAAL9-FBVBQJd6a_RUSImun4GBEqD-"></div>
             </div>
         </div>
       </div>
@@ -246,7 +271,7 @@ Return true;
 
     </div> 
     <!-- kết thúc div cho phần foorter -->
-<div class="scrollToTop"><a href="#" class="btn btn-info btn-lg" style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
+<div class="scrollToTop" style="position: fixed;right: 5px;bottom: 100px;"><a href="#" class="btn btn-info btn-lg" style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
     <span class="glyphicon glyphicon-chevron-up"></span>
 </a></div>
 <script type="text/javascript">
@@ -256,7 +281,7 @@ if ($(this).scrollTop() > 100) $(".scrollToTop").fadeIn();
 else $(".scrollToTop").fadeOut();
 });
 $(".scrollToTop").click(function () {
-$("body,html").animate({scrollTop: 0}, "slow");
+$("body,html").animate({scrollTop: 0}, 800);
 });
 });
 </script>

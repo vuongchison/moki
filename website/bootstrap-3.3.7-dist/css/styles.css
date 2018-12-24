@@ -525,6 +525,4 @@ color: #1d1b1b;
     margin-top: 50px;
 
   }                              
-  .scrollToTop {display:none; bottom: 40%; right: 10px; cursor: pointer;  position: fixed; z-index: 1000;}
-.scrollToTop div {background:crimson; border:2px solid #fff; border-radius:45px; padding:11px 12.5px; box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.3)}
-.scrollToTop img {width:16px; height:16px;}
+  
