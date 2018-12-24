@@ -16,7 +16,7 @@ function login(input, callback) {
 					callback(null, Output.create(9995, {}));
 				}
 				else {
-					UserDao.findByPhonenumber(input.phonenumber, { _id: 0, id: 1, username: 1, avatar: 1 }, function (err, res) {
+					UserDao.findByPhonenumber(input.phonenumber, { id: 1, username: 1, avatar: 1 }, function (err, res) {
 						if (err || Validate.isEmpty(res)) {
 							callback(null, Output.create(9995, {}));
 						}
@@ -25,10 +25,10 @@ function login(input, callback) {
 								res.avatar = '-1';
 							var token = UserDao.getToken(input.phonenumber, input.password);
 							res.token = token;
-
+							res.id = res['_id'];
 							ssn.phonenumber = input.phonenumber;
 							console.log("ssn: phonenumber: " + ssn.phonenumber);
-							callback(null, Output.create(1000, res));
+							callback(null, Output.create(1000, Filter(res, ['id', 'username', 'avatar', 'token'])));
 						}
 
 					});
@@ -179,23 +179,6 @@ function create_code_reset_password(input, callback) {
 				callback(null, Output.create(1000));
 
 				SMS.send(input.phonenumber, "Reset password code: " + code);
-
-				// var PhoneNumber = require('awesome-phonenumber');
-				// var pn = new PhoneNumber(input.phonenumber, 'VN');
-				// var internationalPhonenumber = pn.getNumber();
-
-				// var twilio = require('twilio');
-				// var accountSid = 'ACdaa80ab0aaaa360bc8242bbf1474c8b7'; // Your Account SID from www.twilio.com/console
-				// var authToken = 'adf70bb174102f87c1bb22218949b30f';   // Your Auth Token from www.twilio.com/console
-
-				// var twilio = require('twilio');
-				// var client = new twilio(accountSid, authToken);
-
-				// client.messages.create({
-				// 	body: 'Reset password code: ' + code,
-				// 	to: internationalPhonenumber,  // Text this number
-				// 	from: '+18543335046' // From a valid Twilio number
-				// });
 			}
 		});
 	}
@@ -687,7 +670,30 @@ function get_deposit_history(input, callback) {
 
 }
 function change_password(input, callback) {
-
+	if (Validate.checkParam(input, ['token', 'password', 'new_password'])) {
+		if (Validate.checkPassword(input['new_password']) && Validate.checkPassword(input['password'])) {
+			var user = UserDao.checkToken(input['token']);
+			if (!user) {
+				callback(null, Output.create(9998));
+			} else {
+				var phonenumber = user['phonenumber'];
+				if (input['password'] != user['password']) {
+					callback(err, Output.create(9995));
+				}
+				UserDao.updateByPhonenumber(phonenumber, { password: input['new_password'] }, function (err, res) {
+					if (err || !res) {
+						callback(err, Output.create(1001));
+					} else {
+						callback(err, Output.create(1000, { token: UserDao.getToken(phonenumber, input['new_password']) }));
+					}
+				});
+			}
+		} else {
+			callback(null, Output.create(1004));
+		}
+	} else {
+		callback(null, Output.create(1002));
+	}
 
 }
 function get_push_setting(input, callback) {
@@ -739,7 +745,36 @@ function get_deposit_detail(input, callback) {
 
 }
 function check_password(input, callback) {
+	// console.log("input: " + JSON.stringify(input));
+	if (Validate.checkParam(input, ['token', 'password'])) {
+		if (Validate.checkPassword(input['password'])) {
+			var user = UserDao.checkToken(input['token']);
+			if (!user) {
+				callback(null, Output.create(9998));
+			} else {
+				var phonenumber = user['phonenumber'];
+				if (input['password'] === user['password']) {
+					callback(null, Output.create(1000, { is_correct: 1 }));
+				} else {
+					UserDao.findByPhonenumber(phonenumber, { password: 1 }, function (err, res) {
+						if (err || Validate.isEmpty(res)) {
+							callback(err, Output.create(1001));
+						} else if (input['password'] === res['password']) {
+							callback(err, Output.create(1000, { is_correct: 1 }));
+						} else {
+							callback(err, Output.create(1000, { is_correct: 0 }));
+						}
+					})
+				}
 
+
+			}
+		} else {
+			callback(null, Output.create(1004));
+		}
+	} else {
+		callback(null, Output.create(1002));
+	}
 
 }
 function get_rating_data(input, callback) {
@@ -1066,44 +1101,8 @@ process.on('SIGINT', function () {
 	process.exit();
 });
 
+
 var mime = require('./mime');
-
-
-// var https = require('https');
-// https.createServer(function handler(req, res) {
-
-// 	if (req.method === "GET") {
-// 		get(req, res);
-// 		//		res.writeHead(200, {'Content-Type': 'text/plain'});
-// 		//		res.end('Hello World\n');
-// 	}
-// 	else if (req.method === "POST") {
-// 		post(req, res);
-// 	}
-// }).listen(8080);
-// console.log('Server running at :8080');
-
-
-// var fs = require('fs');
-// var http = require('http');
-// var https = require('https');
-// var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
-// var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
-
-// var credentials = {key: privateKey, cert: certificate};
-// var express = require('express');
-// var app = express();
-
-// // your express configuration here
-
-// var httpServer = http.createServer(app);
-// var httpsServer = https.createServer(credentials, app);
-
-// httpServer.listen(8080);
-// httpsServer.listen(8443);
-// app.get('/',function(req,res){console.log("get \\");});
-
-
 var https = require('https');
 var http = require('http');
 var pem = require('pem');
@@ -1168,7 +1167,7 @@ pem.createCertificate({ days: 365, selfSigned: true }, function (err, keys) {
 	});
 
 	app.post('/api/*', post);
-	app.post('/login.html', function(req, res){
+	app.post('/login.html', function (req, res) {
 		req.originalUrl = '/api/login';
 		post(req, res);
 	});
