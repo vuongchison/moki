@@ -16,7 +16,7 @@ function login(input, callback) {
 					callback(null, Output.create(9995, {}));
 				}
 				else {
-					UserDao.findByPhonenumber(input.phonenumber, { id: 1, username: 1, avatar: 1 }, function (err, res) {
+					UserDao.findByPhonenumber(input.phonenumber, { _id: 0, id: 1, username: 1, avatar: 1 }, function (err, res) {
 						if (err || Validate.isEmpty(res)) {
 							callback(null, Output.create(9995, {}));
 						}
@@ -64,7 +64,7 @@ function signup(input, callback) {
 
 		if (Validate.checkPhonenumber(input.phonenumber) && Validate.checkPassword(input.password)) {
 
-			UserDao.findByPhonenumber({ phonenumber: input.phonenumber },{}, function (err, res) {
+			UserDao.findByPhonenumber({ phonenumber: input.phonenumber }, {}, function (err, res) {
 
 				if (err) {
 					console.log(err);
@@ -281,7 +281,7 @@ function get_list_products(input, callback) {
 		if (input.condition)
 			query['condition'] = input.condition;
 
-		ProductDao.find(query, {_id: 0, id: 1, name: 1, image: 1, video: 1, price: 1, price_percent: 1, brand: 1, described: 1, created: 1, like: 1, comment: 1, state: 1 }, function (err, res) {
+		ProductDao.find(query, { _id: 0, id: 1, name: 1, image: 1, video: 1, price: 1, price_percent: 1, brand: 1, described: 1, created: 1, like: 1, comment: 1, state: 1 }, function (err, res) {
 			if (err) {
 				callback(err, Output.create(1001));
 			}
@@ -296,7 +296,7 @@ function get_list_products(input, callback) {
 					last_index = res.findIndex((i) => (i.id == input.last_id));
 				}
 				console.log('last_index: ' + last_index);
-				if (index > res.length - 1){
+				if (index > res.length - 1) {
 					callback(null, Output.create(1000));
 				}
 				else if (index >= last_index + 1) {
@@ -336,10 +336,70 @@ function get_list_products(input, callback) {
 }
 function get_products(input, callback) {
 	// bỏ các trường price_new, modified, best_offers, can_buy, product_waiting_rate, seller_vacation_mode, offers, allow_offer, auto_accept, messages (nằm trong data)
-
+	if (Validate.checkParam(input, ['id'])) {
+		ProductDao.findById(input.id, { _id: 0, id: 1, name: 1, price: 1, price_percent: 1, described: 1, ships_from: 1, ships_from_id: 1, condition: 1, created: 1, like: 1, comment: 1, image: 1, video: 1, size: 1, brand: 1, seller: 1, category: 1, state: 1, weight: 1, dimension: 1 }, function (err, res) {
+			if (err) {
+				callback(err, Output.create(1001));
+			} else if (Validate.isEmpty(res)) {
+				callback(err, Output.create(1004));
+			} else {
+				callback(err, Output.create(1000, res));
+			}
+		});
+	} else {
+		callback(null, Output.create(1002));
+	}
 }
 function add_products(input, callback) {
 	// Trường (input) key của API add_product bỏ, price_new, allow_offer, auto_accept bỏ. Trả về url để người dùng có thể share sản phẩm. Trường thumb chỉ cần nếu client trước đó có gọi api upload_video. Trường image, video phải gửi mảng byte lên.
+
+	if (Validate.checkParam(input, ['token', 'name', 'price', 'category_id', 'ships_from', 'ships_from_id', 'condition'])) {
+		var user = UserDao.checkToken(input.token);
+		if (user == false) {
+			callback(null, Output.create(9998));
+		} else {
+			UserDao.findByPhonenumber(user.phonenumber, { id: 1, name: 1, avatar: 1 }, function (err, res) {
+				if (err) {
+					callback(err, Output.create(1001));
+				} else if (Validate.isEmpty(res)) {
+					callback(null, Output.create(1004));
+				} else {
+					var product = Filter(input, ['name', 'price', 'image', 'video', 'thumb', 'described', 'condition', 'dimension', 'weight']);
+
+					product[seller] = res;
+
+					if (product[brand]) product[brand] = { id: id };
+
+
+					CategoryDao.findById(input.category_id, { id: 1, name: 1 }, function (err, res) {
+						if (err) {
+							callback(err, Output.create(1001));
+						} else if (Validate.isEmpty(res)) {
+							callback(null, Output.create(1004));
+						} else {
+
+							product[category] = [{ id: res.id, name: res.name }];
+							product[id] = parseInt(db.product_last_id) + 1;
+							product[created] = product[modified] = Math.floor( Date.now()/1000);
+							
+
+							ProductDao.save(product, function (err, res) {
+								if (err || Validate.isEmpty(res)) {
+									callback(err, Output.create(1001));
+								} else {
+									db.product_last_id++;
+									callback(null, Output.create(1000), { id: res.id, url: "/product/" + id });
+								}
+							});
+
+						}
+					});
+				}
+			});
+		}
+	} else {
+		callback(null, Output.create(1002));
+	}
 
 }
 function get_key_add_products(input, callback) {
@@ -347,11 +407,94 @@ function get_key_add_products(input, callback) {
 
 }
 function edit_products(input, callback) {
+	if (Validate.checkParam(input, ['token', 'id'])) {
+		var user = UserDao.checkToken(input.token);
+		if (user == false) {
+			callback(null, Output.create(9998));
+		} else {
+			UserDao.findByPhonenumber(user.phonenumber, { id: 1, phonenumber: 1 }, function (err, res) {
+				if (err) {
+					callback(err, Output.create(1001));
+				} else if (Validate.isEmpty(res)) {
+					callback(null, Output.create(1004));
+				} else {
+					var userId = res.id;
+					ProductDao.findById(input.id, {}, function (err, res) {
+						if (err) {
+							callback(err, Output.create(1001));
+						} else if (Validate.isEmpty(res)) {
+							callback(null, Output.create(1004));
+						} else if (userId != res.seller.id) {
+							//not access
+							callback(null, Output.create(1009));
+						} else {
+							var values = Filter(input, ['name', 'price', 'described', 'brand_id', 'ships_from', 'ships_from_id', 'condition', 'dimension', 'weight']);
 
+							if (input['brand_id']) values['brand'] = { id: input['brand_id'] };
+							if (input['category_id']) values['category'] = { id: input['category_id'] };
+
+							values[modified] = Math.floor( Date.now()/1000);
+
+							ProductDao.updateById(input.id, values, function (err, res) {
+								if (err) {
+									callback(err, Output.create(1001));
+								} else if (Validate.isEmpty(res)) {
+									callback(null, Output.create(1004));
+								} else {
+									callback(null, Output.create(1000));
+								}
+							})
+						}
+
+					})
+
+				}
+			});
+		}
+	} else {
+		callback(null, Output.create(1002));
+	}
 
 }
 function del_products(input, callback) {
+	if (Validate.checkParam(input, ['token', 'id'])) {
+		var user = UserDao.checkToken(input.token);
+		if (user == false) {
+			callback(null, Output.create(9998));
+		} else {
+			UserDao.findByPhonenumber(user.phonenumber, { id: 1, phonenumber: 1 }, function (err, res) {
+				if (err) {
+					callback(err, Output.create(1001));
+				} else if (Validate.isEmpty(res)) {
+					callback(null, Output.create(1004));
+				} else {
+					var userId = res.id;
+					ProductDao.findById(input.id, {}, function (err, res) {
+						if (err) {
+							callback(err, Output.create(1001));
+						} else if (Validate.isEmpty(res)) {
+							callback(null, Output.create(1004));
+						} else if (userId != res.seller.id) {
+							//not access
+							callback(null, Output.create(1009));
+						} else {
+							ProductDao.deleteById(input.id, function (err, res) {
+								if (err || res == false) {
+									callback(err, Output.create(1001));
+								} else {
+									callback(null, Output.create(1000));
+								}
+							})
+						}
 
+					})
+
+				}
+			});
+		}
+	} else {
+		callback(null, Output.create(1002));
+	}
 
 }
 function get_comment_products(input, callback) {
@@ -375,6 +518,72 @@ function buy_products(input, callback) {
 
 }
 function search(input, callback) {
+	
+	if (Validate.checkParam(input, ['index', 'count'])) {
+		var index = parseInt(input.index);
+		var count = parseInt(input.count);
+		console.log("input: " + JSON.stringify(input));
+		var query = {};
+		if (input.category_id)
+			query['category.id'] = (input.category_id);
+		if (input.brand_id)
+			query['brand.id'] = (input.brand_id);
+		if (input.product_size_id)
+			query['size.id'] = (input.product_size_id);
+		if (input.condition)
+			query['condition'] = input.condition;
+
+		ProductDao.find(query, { _id: 0, id: 1, name: 1, image: 1, video: 1, price: 1, price_percent: 1, brand: 1, described: 1, created: 1, like: 1, comment: 1, state: 1 }, function (err, res) {
+			if (err) {
+				callback(err, Output.create(1001));
+			}
+			else {
+				//sắp xếp theo ngày tạo (mới -> cũ)
+				res.sort((a, b) => - parseInt(a.created) + parseInt(b.created));
+
+				// console.log("res: " + JSON.stringify(res));
+
+				var last_index = -1;
+				if (input.last_id) {
+					last_index = res.findIndex((i) => (i.id == input.last_id));
+				}
+				console.log('last_index: ' + last_index);
+				if (index > res.length - 1) {
+					callback(null, Output.create(1000));
+				}
+				else if (index >= last_index + 1) {
+					//không có sản phẩm mới đăng hoặc lần đầu get_list_products
+
+					var result = res.slice(index, index + count);
+					// console.log("result: " + result);
+					callback(null, Output.create(1000, { products: result, new_items: 0, last_id: result[result.length - 1]['id'] }));
+
+				} else {
+					//có sản phẩm mới đăng
+					var result = [];
+					var first_index = last_index - index + 1; //product đầu tiên đã get
+					var c = 0;
+
+					for (var i = first_index - 1; c < count && i >= 0; i-- , c++) {
+						result.push(res[i]);
+					}
+
+					for (var i = last_index + 1, l = res.length; c < count && i < l; i++ , c++) {
+						result.push(res[i]);
+					}
+
+					callback(null, Output.create(1000, { products: result, new_items: first_index, last_id: result[result.length - 1].id }));
+
+				}
+
+			}
+		});
+
+
+	}
+	else {
+		callback(null, Output.create(1002));
+	}
 
 
 }
@@ -871,6 +1080,17 @@ var Validate = require('./util/Validate');
 var Output = require('./util/Output');
 var SMS = require('./util/SMS');
 var RandomCode = require('./util/RandomCode');
+var Filter = require('./util/Filter');
+var File = require('./util/File');
+
+const dbConfigPath = './config/mongodb.JSON';
+var db = File.loadData(dbConfigPath);
+
+process.on('exit', (code) => {
+	console.log("exiting...");
+	File.storeData(db, dbConfigPath);
+});
+
 
 var mime = require('./mime');
 

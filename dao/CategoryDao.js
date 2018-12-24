@@ -72,9 +72,15 @@ class CategoryDao {
 		});
 	}
 
+	static fineById(id, projection, callback){
+		categoriesCollection.findOne({id: id}, {projection: projection}, function (err, res) {
+					callback(err, res);
+				});
+	}
+
 	static save(category, callback) {
 
-		categoriesCollection.insertOne(product, function (err, res) {
+		categoriesCollection.insertOne(category, function (err, res) {
 			// console.log("1 document inserted");
 			if (err) callback(err, false);
 			else callback(null, true);

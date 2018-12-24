@@ -6,9 +6,9 @@ const jwt 		= require('jsonwebtoken');
 
 // use 'utf8' to get string instead of byte array  (1024 bit key)
 
-var privateKEY 	= fs.readFileSync('./private.key', 'utf8'); // to sign JWT
+var privateKEY 	= fs.readFileSync(__dirname + '/private.key', 'utf8'); // to sign JWT
 
-var publicKEY 	= fs.readFileSync('./public.key', 'utf8'); 	// to verify JWT
+var publicKEY 	= fs.readFileSync(__dirname + '/public.key', 'utf8'); 	// to verify JWT
 
 var issuer = "moki";
 
