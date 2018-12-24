@@ -1,197 +1,232 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>MOKI - Ứng dụng giúp các mẹ trao đổi, mua bán đồ</title>
-<link rel="icon" href="img/app_icon.png">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-<link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/styles.css"/>
-<script type="text/javascript">
-    Function checkInput ( )
-{
-//kiem tra user name
-If ( document.flogin.USERNAME.value= =””)
-{
-Alert( “invalidEmail, Vui long nhap Email”);
-document.flogin.USERNAME.focus( );
-return false;
-}
-//kiem tra password
-If ( document.flogin.PASSWORD.value= =””)
-{
-Alert( “ Vui long nhap password”);
-document.flogin.PASSWORD.focus( );
-return false;
-}
-Return true;
-}
-</script>
+<head>
+    <title>MOKI - Ứng dụng giúp các mẹ trao đổi, mua bán đồ</title>
+    <link rel="icon" href="img/app_icon.png">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/styles.css" />
+    <script type="text/javascript">
+        function checkInput() {
+            //kiem tra user name
+            if (document.flogin.USERNAME.value == "")
+            {
+                alert("invalidEmail, Vui long nhap Email");
+                document.flogin.USERNAME.focus();
+                return false;
+            }
+            //kiem tra password
+            if(document.flogin.PASSWORD.value =="")
+            {
+                alert(" Vui long nhap password");
+                document.flogin.PASSWORD.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
+
 <body>
-    
+
     <div class="tophead" style="background: url(img/bkg_top_header.png) bottom center repeat-y;color:#fff;height: 30px;">
         <div class="container">
-        <div class="left area col-md-4">
-            <i class= "glyphicon glyphicon-earphone"></i> Hotline: 1900 636 779
-            
-        </div>
-        <div class="right area col-md-8"style="margin-right:0px;">
-            <div class="line col-md-4" style="font-family: arial;">Chào mừng bạn đến với MOKI</div>
-            <div class="line col-md-3">
-             <a href="#"style="color:#fff;">  <i class=" glyphicon glyphicon-flag"></i> Kiểm tra đơn hàng</a> 
+            <div class="left area col-md-4">
+                <i class="glyphicon glyphicon-earphone"></i> Hotline: 1900 636 779
+
             </div>
-            <div class="line col-md-2">
-                <a href="#"style="color:#fff;" ><i class="glyphicon glyphicon-shopping-cart"></i> Giỏ hàng</a>
+            <div class="right area col-md-8" style="margin-right:0px;">
+                <div class="line col-md-4" style="font-family: arial;">Chào mừng bạn đến với MOKI</div>
+                <div class="line col-md-3">
+                    <a href="#" style="color:#fff;"> <i class=" glyphicon glyphicon-flag"></i> Kiểm tra đơn hàng</a>
+                </div>
+                <div class="line col-md-2">
+                    <a href="#" style="color:#fff;"><i class="glyphicon glyphicon-shopping-cart"></i> Giỏ hàng</a>
+                </div>
+                <a href="#" style="color:#fff;" col-md-2>Đăng nhập</a>&nbsp;/&nbsp;
+                <a href="#" style="color:#fff;" col-md-1.5>Đăng ký</a>
             </div>
-            <a href="#"style="color:#fff;" col-md-2>Đăng nhập</a>&nbsp;/&nbsp;
-            <a href="#"style="color:#fff;" col-md-1.5>Đăng ký</a>
         </div>
-    </div>
     </div>
     <div class="shadow">
         <div class="head">
-                <div class="container" style="margin-bottom: 15px;">
+            <div class="container" style="margin-bottom: 15px;">
                 <div class="row">
-                        <div class="col-md-4">
-                            <img src="img/logo_medium.png">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="search" >
-                                <form method=" " action="">
-                                
-                                      <input type="text" name="value" placeholder="Tìm kiếm sản phẩm"/>
-                                      
-                                     <button class="glyphicon glyphicon-search">
-                                     &nbsp;
-                                     </button>
-                                     </form>
-                            
-                            </div>
-                            <div class="txthead" style="margin-left: 150px;">
-                                <a class=" float txt" href="#"><h5><B>TRANG CHỦ</B></h5></a>
-                                <a class=" float txt" href="#"><h5><B> GÓC CỦA MẸ</B></h5></a>
-                                <a class="float txt" href="#"><h5><B>GIỚI THIỆU</B></h5></a>
-                                <a class=" float txt" href="#"><h5><B>SHOP MOKI</B></h5></a>
-                                
-                            </div>
+                    <div class="col-md-4">
+                        <img src="img/logo_medium.png">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="search">
+                            <form method=" " action="">
 
+                                <input type="text" name="value" placeholder="Tìm kiếm sản phẩm" />
+
+                                <button class="glyphicon glyphicon-search">
+                                    &nbsp;
+                                </button>
+                            </form>
 
                         </div>
+                        <div class="txthead" style="margin-left: 150px;">
+                            <a class=" float txt" href="#">
+                                <h5><B>TRANG CHỦ</B></h5>
+                            </a>
+                            <a class=" float txt" href="#">
+                                <h5><B> GÓC CỦA MẸ</B></h5>
+                            </a>
+                            <a class="float txt" href="#">
+                                <h5><B>GIỚI THIỆU</B></h5>
+                            </a>
+                            <a class=" float txt" href="#">
+                                <h5><B>SHOP MOKI</B></h5>
+                            </a>
+
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
-        
-    </div>
+
+        </div>
     </div>
     <!--Phan than-->
     <div class="body">
-    <div class="container">
-        <div class="row">
-         <div class="col-md-8 col-md-offset-2"  style="background-color: #fff;margin-bottom:60px;">
-            <div class="DangNhap" style="margin-top: 24px;">
-             <div class="login_header" style="border-bottom: border-box;font-family: arial,sans-serif;font-size: 16px; "><b>Đăng nhập hoặc tạo tài khoản MOKI</b><hr></div>
- <form name="login" method="post" action="" onsubmit="return checkinput();">
-<div class="form-group">
-    <label class="col-md-3 control-label" style="font-family: sans-serif;margin-left: 30px;">Nhập số điện thoại</label>
-     <div class="col-md-6" style="margin-left: -30px;">
-      <div class="input number required" aria-required="true"><input name="data[User][phonenumber]" class="form-control" placeholder="Vui lòng nhập số điện thoại" autofocus="autofocus" data-rule-required="true" data-msg-required="Vui lòng nhập số điện thoại của bạn" data-rule-number="true" data-msg-number="Vui lòng chỉ nhập số" data-rule-minlength="10" data-msg-minlength="Số điện thoại từ 10 - 11 ký tự" data-rule-maxlength="11" data-msg-maxlength="Số điện thoại từ 10 - 11 ký tự" onfocus="window.scrollTo(0, 0);" type="number" id="UserPhonenumber" required="required" aria-required="true"></div>
-    </div>
-</div>
-<div class="form-group">
-     <div class="col-md-6 col-md-offset-3" style="margin-top: 20px;">
-     <div class="radio">
-      <label>
-        <input type="radio" name="optradio" id="optradio_1" value="1">Tạo một tài khoản
-      </label>
-    </div>
-   </div>
-</div>
-<div class="form-group">
-     <div class="col-md-6 col-md-offset-3" style="margin-top: 15px;">
-      <div class="radio">
-        <label>
-        <input type="radio" name="optradio" id="optradio_2" value="2" checked="">Tôi đã có tài khoản MOKI
-          </label>
-         </div>
-        </div>
-</div>
-<div class="form-group">
-    <div class="col-md-6 col-md-offset-3" style="margin-top: 20px;">
-       <div class="input password required" aria-required="true"><input name="data[User][password]" class="form-control" placeholder="Vui lòng nhập mật khẩu" data-rule-required="true" data-msg-required="Vui lòng nhập mật khẩu" data-rule-lettersonly="true" data-msg-lettersonly="Vui lòng chỉ nhập chữ và số" data-rule-minlength="6" data-msg-minlength="Mật khẩu tối thiểu 6 ký tự" data-rule-maxlength="30" data-msg-maxlength="Mật khẩu tối đa 30 ký tự" maxlength="30" type="password" id="UserPassword" required="required" aria-required="true"></div>                                    </div>
-</div>
-<div class="form-group">
-     <div class="col-md-6 col-md-offset-3" >
-         <a href="#" class="control-label" style="float: right; margin-top: 20px;" target="_blank">Quên mật khẩu?</a>
-       </div>
-</div>
-<div class="form-group">
-     <div class="col-md-6 col-md-offset-3" style="margin-top: 20px;margin-bottom: 20px; height: 100px;">
-    <button type="submit" class="btn btn-default text-right" style="background-color:#f16e8e;color:#fff;width: 345px;border-bottom: outset;border-color: #b91635;  ">Tiếp tục</button>
-        </div>
-  </div>
- </form>
-    </div>
-  </div>
-</div>
-        
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2" style="background-color: #fff;margin-bottom:60px;">
+                    <div class="DangNhap" style="margin-top: 24px;">
+                        <div class="login_header" style="border-bottom: border-box;font-family: arial,sans-serif;font-size: 16px; "><b>Đăng
+                                nhập hoặc tạo tài khoản MOKI</b>
+                            <hr>
+                        </div>
+                        <form name="login" method="post" action="" onsubmit="return checkinput();">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" style="font-family: sans-serif;margin-left: 30px;">Nhập
+                                    số điện thoại</label>
+                                <div class="col-md-6" style="margin-left: -30px;">
+                                    <div class="input number required" aria-required="true"><input name="data[User][phonenumber]"
+                                            class="form-control" placeholder="Vui lòng nhập số điện thoại" autofocus="autofocus"
+                                            data-rule-required="true" data-msg-required="Vui lòng nhập số điện thoại của bạn"
+                                            data-rule-number="true" data-msg-number="Vui lòng chỉ nhập số"
+                                            data-rule-minlength="10" data-msg-minlength="Số điện thoại từ 10 - 11 ký tự"
+                                            data-rule-maxlength="11" data-msg-maxlength="Số điện thoại từ 10 - 11 ký tự"
+                                            onfocus="window.scrollTo(0, 0);" type="number" id="UserPhonenumber"
+                                            required="required" aria-required="true"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3" style="margin-top: 20px;">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optradio" id="optradio_1" value="1">Tạo một tài
+                                            khoản
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3" style="margin-top: 15px;">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optradio" id="optradio_2" value="2" checked="">Tôi
+                                            đã có tài khoản MOKI
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3" style="margin-top: 20px;">
+                                    <div class="input password required" aria-required="true"><input name="data[User][password]"
+                                            class="form-control" placeholder="Vui lòng nhập mật khẩu"
+                                            data-rule-required="true" data-msg-required="Vui lòng nhập mật khẩu"
+                                            data-rule-lettersonly="true" data-msg-lettersonly="Vui lòng chỉ nhập chữ và số"
+                                            data-rule-minlength="6" data-msg-minlength="Mật khẩu tối thiểu 6 ký tự"
+                                            data-rule-maxlength="30" data-msg-maxlength="Mật khẩu tối đa 30 ký tự"
+                                            maxlength="30" type="password" id="UserPassword" required="required"
+                                            aria-required="true"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <a href="#" class="control-label" style="float: right; margin-top: 20px;" target="_blank">Quên
+                                        mật khẩu?</a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3" style="margin-top: 20px;margin-bottom: 20px; height: 100px;">
+                                    <button type="submit" class="btn btn-default text-right" style="background-color:#f16e8e;color:#fff;width: 345px;border-bottom: outset;border-color: #b91635;  ">Tiếp
+                                        tục</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-    </div>
+
+        </div>
     </div>
     <!-- Dong Phan than-->
     <div class="foorter">
-            <div class="container">
+        <div class="container">
             <div class="hang1">
-                    <div class="col-md-12">
-                            <a href="#"> Hỏi và đáp</a>
-                            <a href="#"> Điều khoản sử dụng</a>
-                            <a href="#"> Bảo mật thông tin khách hàng</a>
-                            <a href="#"> Giải quyết khiếu nại, Tranh chấp</a>
-                            <a href="#"> Quy chế hoạt động</a>
+                <div class="col-md-12">
+                    <a href="#"> Hỏi và đáp</a>
+                    <a href="#"> Điều khoản sử dụng</a>
+                    <a href="#"> Bảo mật thông tin khách hàng</a>
+                    <a href="#"> Giải quyết khiếu nại, Tranh chấp</a>
+                    <a href="#"> Quy chế hoạt động</a>
 
-                    </div>
+                </div>
 
             </div>
             <div class="hang2">
                 <div class="col-md-4">
-                  <div class="container">
-                  <img src="img/logo_medium.png" style="width:11%; margin-left: 80px;"/>
-                      </div>
-                <p>CÔNG TY CỔ PHẦN MOKI</p>
-                <P>Giấy CNĐKDN: 0107370701-Ngày cấp:24/3/2016.</P>
-                <p> Cơ quan cấp: Phòng đăng kí kinh doanh sở Kế Hoạch và Đầu Tư Thành Phố Hà Nội</p>
-                     <br>
-                 <div style="border-bottom: 1px solid #111111;"></div>
-                 <div class="singin">
-                  <p>Đăng kí nhận thông tin ưu đãi và khuyến mại khủng từ MOKI</p>
-                     <div  class="email">
-                       <form method=" " action="">
-                    <input type="text" name="value" placeholder=" Nhập email của bạn"/>
-                    <button>Đăng kí</button>
-                        </form>
-                     </div>
-                     </div>
+                    <div class="container">
+                        <img src="img/logo_medium.png" style="width:11%; margin-left: 80px;" />
                     </div>
-            <div class="col-md-4">
-                <h3>Liên Hệ</h3><br>
-                  <div class="map">
-                   <h4><i class="glyphicon glyphicon-map-marker"><b>TRỤ SỞ CHÍNH</b></i></h4>
-                            <P>6/50, đường Lĩnh Nam, Hoàng Mai, Hà Nội</P>
-                            <h4><b style="font-family:'Times New Roman', Times, serif;"> ĐỊA CHỈ GIAO DỊCH:</b></h4>
-                            <P>Tầng 10, Tòa nhà ZenTower, 12 Khuất Duy Tiến, Thanh Xuân Trung, Thanh Xuân, Hà Nội</P>
+                    <p>CÔNG TY CỔ PHẦN MOKI</p>
+                    <P>Giấy CNĐKDN: 0107370701-Ngày cấp:24/3/2016.</P>
+                    <p> Cơ quan cấp: Phòng đăng kí kinh doanh sở Kế Hoạch và Đầu Tư Thành Phố Hà Nội</p>
+                    <br>
+                    <div style="border-bottom: 1px solid #111111;"></div>
+                    <div class="singin">
+                        <p>Đăng kí nhận thông tin ưu đãi và khuyến mại khủng từ MOKI</p>
+                        <div class="email">
+                            <form method=" " action="">
+                                <input type="text" name="value" placeholder=" Nhập email của bạn" />
+                                <button>Đăng kí</button>
+                            </form>
                         </div>
-                        <div class="hotline">
-                                <i class="glyphicon glyphicon-phone"><i>Hotline: 1900.636.779</i></i>
-                        </div>
-                        <div class="clock">
-                                <i class="glyphicon glyphicon-time"><i>Thú 2-thứ 6:8h00-12h00,13h00-17h00 thu 7:8h00-12h00</i> </i>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h3>Liên Hệ</h3><br>
+                    <div class="map">
+                        <h4><i class="glyphicon glyphicon-map-marker"><b>TRỤ SỞ CHÍNH</b></i></h4>
+                        <P>6/50, đường Lĩnh Nam, Hoàng Mai, Hà Nội</P>
+                        <h4><b style="font-family:'Times New Roman', Times, serif;"> ĐỊA CHỈ GIAO DỊCH:</b></h4>
+                        <P>Tầng 10, Tòa nhà ZenTower, 12 Khuất Duy Tiến, Thanh Xuân Trung, Thanh Xuân, Hà Nội</P>
+                    </div>
+                    <div class="hotline">
+                        <i class="glyphicon glyphicon-phone"><i>Hotline: 1900.636.779</i></i>
+                    </div>
+                    <div class="clock">
+                        <i class="glyphicon glyphicon-time"><i>Thú 2-thứ 6:8h00-12h00,13h00-17h00 thu 7:8h00-12h00</i>
+                        </i>
 
-                        </div>
-                        <div class="mail"><i class="glyphicon glyphicon-envelope"><i>hotro@moki.vn</i> </i></div>
-                        <div class="danhgia"><i class="glyphicon glyphicon-globe"> <i>www.moki.vn</i> </i></div>
                     </div>
-                    
-                    <div class="col-md-4 scroll"><h5>Các danh mục liên kết</h5>
-                       <div style="color: #1d1b1b;"><div><a href="#">Miễn phí</a></div>    
+                    <div class="mail"><i class="glyphicon glyphicon-envelope"><i>hotro@moki.vn</i> </i></div>
+                    <div class="danhgia"><i class="glyphicon glyphicon-globe"> <i>www.moki.vn</i> </i></div>
+                </div>
+
+                <div class="col-md-4 scroll">
+                    <h5>Các danh mục liên kết</h5>
+                    <div style="color: #1d1b1b;">
+                        <div><a href="#">Miễn phí</a></div>
                         <div><a href="#">Bé ăn</a></div>
                         <div><a href="#">Bé mặc</a></div>
                         <div><a href="#">Bé ngủ</a></div>
@@ -199,96 +234,101 @@ Return true;
                         <div><a href="#">Bé vệ sinh</a></div>
                         <div><a href="#">Bé khỏe, bé an toàn</a></div>
                         <div><a href="#">Đồ dùng gia đình</a></div>
-                        
+
                         <div><a href="#">Góc của mẹ</a></div>
-                        <div><a href="#">Bé ra ngoài</a></div></div>
-                        <div class="float"style="width:170px;"><img src="img/dadangky.png" style="width: 170px;"/></div>
-                        <div class="float"style="width:170px;"><img src="img/dadangky.png" style="width: 170px;"/></div>
+                        <div><a href="#">Bé ra ngoài</a></div>
+                    </div>
+                    <div class="float" style="width:170px;"><img src="img/dadangky.png" style="width: 170px;" /></div>
+                    <div class="float" style="width:170px;"><img src="img/dadangky.png" style="width: 170px;" /></div>
                 </div>
             </div>
             <div class="hang3">
-                    <div><h5><b style="font-family: arial;">Top tìm kiếm</b></h5></div>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Bính sũa và phụ kiện</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
-                    
+                <div>
+                    <h5><b style="font-family: arial;">Top tìm kiếm</b></h5>
+                </div>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Bính sũa và phụ kiện</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+                <a href="#" class="line2">Ghế ăn bột cho bé</a><span> | </span>
+
             </div>
         </div>
 
-    </div> 
+    </div>
     <!-- kết thúc div cho phần foorter -->
-    <div class="scrollToTop" style="position: fixed;right: 5px;bottom: 300px;"><a href="#" class="btn btn-info btn-lg" style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
-    <span class="glyphicon glyphicon-chevron-up"></span>
-</a></div>
-<script type="text/javascript">
-    $(function(){
-$(window).scroll(function () {
-if ($(this).scrollTop() > 100) $(".scrollToTop").fadeIn();
-else $(".scrollToTop").fadeOut();
-});
-$(".scrollToTop").click(function () {
-$("body,html").animate({scrollTop: 0}, 800);
-});
-});
-</script>
+    <div class="scrollToTop" style="position: fixed;right: 5px;bottom: 300px;"><a href="#" class="btn btn-info btn-lg"
+            style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </a></div>
+    <script type="text/javascript">
+        $(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 100) $(".scrollToTop").fadeIn();
+                else $(".scrollToTop").fadeOut();
+            });
+            $(".scrollToTop").click(function () {
+                $("body,html").animate({ scrollTop: 0 }, 800);
+            });
+        });
+    </script>
 
     <div class="nhanvien">
-           <a href="#" style="position: fixed;right: 5px;bottom: 0px;"><img src="img/chatbox-nv.png"/></a>
+        <a href="#" style="position: fixed;right: 5px;bottom: 0px;"><img src="img/chatbox-nv.png" /></a>
     </div>
     <!-- phần chat bot cho MOKI -->
     <div class="chatbot" style="position: fixed;right: 150px;bottom: 0px;">
-       <div class="topchat">
-                    <div class="dot float"></div>
-                    <div class="float"> Chát với chúng tôi(Hotline:1900 636 779 )</div>
+        <div class="topchat">
+            <div class="dot float"></div>
+            <div class="float"> Chát với chúng tôi(Hotline:1900 636 779 )</div>
 
-            </div>
-            <div class="nhap">
-                    <form action="" method="">
-                            <input type="text" placeholder="Xin mời nhập tên của bạn"/>
-                    </form>
-            </div>
-            <div class="nhap">
-                    <form action="" method="">
-                            <input type="text" placeholder="Xin mời nhập số điện thoại"/>
-                    </form>
-            </div>
-            <div class="nhap">
-                    <form action="" method="">
-                            <input type="text" placeholder="Xin mời nhập Email"/>
-                    </form>
-            </div>
-            <div class="submit">
-                    <button type="submit"> Bắt đầu chat</button>
-            </div>
+        </div>
+        <div class="nhap">
+            <form action="" method="">
+                <input type="text" placeholder="Xin mời nhập tên của bạn" />
+            </form>
+        </div>
+        <div class="nhap">
+            <form action="" method="">
+                <input type="text" placeholder="Xin mời nhập số điện thoại" />
+            </form>
+        </div>
+        <div class="nhap">
+            <form action="" method="">
+                <input type="text" placeholder="Xin mời nhập Email" />
+            </form>
+        </div>
+        <div class="submit">
+            <button type="submit"> Bắt đầu chat</button>
+        </div>
     </div>
 
-    
-    </body>
-    </html>
+
+</body>
+
+</html>

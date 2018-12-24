@@ -380,8 +380,8 @@ function add_products(input, callback) {
 
 							product[category] = [{ id: res.id, name: res.name }];
 							product[id] = parseInt(db.product_last_id) + 1;
-							product[created] = product[modified] = Math.floor( Date.now()/1000);
-							
+							product[created] = product[modified] = Math.floor(Date.now() / 1000);
+
 
 							ProductDao.save(product, function (err, res) {
 								if (err || Validate.isEmpty(res)) {
@@ -433,7 +433,7 @@ function edit_products(input, callback) {
 							if (input['brand_id']) values['brand'] = { id: input['brand_id'] };
 							if (input['category_id']) values['category'] = { id: input['category_id'] };
 
-							values[modified] = Math.floor( Date.now()/1000);
+							values[modified] = Math.floor(Date.now() / 1000);
 
 							ProductDao.updateById(input.id, values, function (err, res) {
 								if (err) {
@@ -518,7 +518,7 @@ function buy_products(input, callback) {
 
 }
 function search(input, callback) {
-	
+
 	if (Validate.checkParam(input, ['index', 'count'])) {
 		var index = parseInt(input.index);
 		var count = parseInt(input.count);
@@ -530,51 +530,30 @@ function search(input, callback) {
 			query['brand.id'] = (input.brand_id);
 		if (input.product_size_id)
 			query['size.id'] = (input.product_size_id);
+		if (input.price_min)
+			query['price']['$gte'] = parseInt(input.price_min);
+		if (input.price_max)
+			query['price']['$lte'] = parseInt(input.price_max);
 		if (input.condition)
 			query['condition'] = input.condition;
+		if (input.seller_id)
+			query['seller.id'] = input.seller_id;
 
-		ProductDao.find(query, { _id: 0, id: 1, name: 1, image: 1, video: 1, price: 1, price_percent: 1, brand: 1, described: 1, created: 1, like: 1, comment: 1, state: 1 }, function (err, res) {
+		var keyword = (input['keyword'] || '');
+
+		ProductDao.search(keyword, query, { _id: 0, id: 1, name: 1, image: 1, video: 1, price: 1, price_percent: 1, like: 1, comment: 1 }, function (err, res) {
 			if (err) {
 				callback(err, Output.create(1001));
 			}
 			else {
-				//sắp xếp theo ngày tạo (mới -> cũ)
-				res.sort((a, b) => - parseInt(a.created) + parseInt(b.created));
 
-				// console.log("res: " + JSON.stringify(res));
-
-				var last_index = -1;
-				if (input.last_id) {
-					last_index = res.findIndex((i) => (i.id == input.last_id));
-				}
-				console.log('last_index: ' + last_index);
-				if (index > res.length - 1) {
-					callback(null, Output.create(1000));
-				}
-				else if (index >= last_index + 1) {
-					//không có sản phẩm mới đăng hoặc lần đầu get_list_products
-
-					var result = res.slice(index, index + count);
-					// console.log("result: " + result);
-					callback(null, Output.create(1000, { products: result, new_items: 0, last_id: result[result.length - 1]['id'] }));
-
-				} else {
-					//có sản phẩm mới đăng
-					var result = [];
-					var first_index = last_index - index + 1; //product đầu tiên đã get
-					var c = 0;
-
-					for (var i = first_index - 1; c < count && i >= 0; i-- , c++) {
-						result.push(res[i]);
-					}
-
-					for (var i = last_index + 1, l = res.length; c < count && i < l; i++ , c++) {
-						result.push(res[i]);
-					}
-
-					callback(null, Output.create(1000, { products: result, new_items: first_index, last_id: result[result.length - 1].id }));
+				var result = res.slice(index, index + count);
+				for (var i = 0, l = result.length; i < l; i++) {
+					result[i] = Filter(result[i], ['id', 'name', 'image', 'video', 'price', 'price_percent', 'like', 'comment', 'described']);
 
 				}
+				callback(null, Output.create(1000, result));
+
 
 			}
 		});
@@ -1010,28 +989,20 @@ function post(req, res) {
 
 	var apiFun = api[req.originalUrl];
 	if (apiFun != null) {
-		// let body = '';
-		// req.on('data', chunk => {
-		// 	body += chunk.toString(); // convert Buffer to string
-		// });
-		// req.on('end', () => {
-		// 	console.log(body);
-		// 	apiFun(JSON.parse(body), function (err, result) {
-		// 		result = JSON.stringify(result);
-		// 		res.writeHead(200, { 'Content-Type': mime.getType('.JSON'), 'Content-Length': result.length });
-		// 		res.end(result);
-		// 	});
-		// });
-		// console.log(req);
+
 		ssn = req.session; console.log('phonenumber: ' + ssn.phonenumber);
-		apiFun(req.body, function (err, result) {
-			// result = JSON.stringify(result);
-			if (err) {
-				console.log(err);
-			}
-			res.status(200);
-			res.json(result);
-		});
+		try {
+			apiFun(req.body, function (err, result) {
+				// result = JSON.stringify(result);
+				if (err) {
+					console.log(err);
+				}
+				res.status(200);
+				res.json(result);
+			});
+		} catch (err) {
+			console.log(err);
+		}
 
 	}
 	else {
@@ -1090,7 +1061,10 @@ process.on('exit', (code) => {
 	console.log("exiting...");
 	File.storeData(db, dbConfigPath);
 });
-
+process.on('SIGINT', function () {
+	console.log("Interrupt signal");
+	process.exit();
+});
 
 var mime = require('./mime');
 
@@ -1183,14 +1157,21 @@ pem.createCertificate({ days: 365, selfSigned: true }, function (err, keys) {
 
 
 		if (!fileSystem.existsSync(filePath)) {
-			filePath = path.join(root, errorPage);
-		}
+			// filePath = path.join(root, errorPage);
+			res.sendStatus(404);
 
-		res.status(200);
-		res.sendFile(filePath);
+		}
+		else {
+			res.status(200);
+			res.sendFile(filePath);
+		}
 	});
 
 	app.post('/api/*', post);
+	app.post('/login.html', function(req, res){
+		req.originalUrl = '/api/login';
+		post(req, res);
+	});
 
 	http.createServer(app).listen(80);
 	https.createServer({ key: keys.serviceKey, cert: keys.certificate }, app).listen(443);

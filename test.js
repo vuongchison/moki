@@ -36,8 +36,8 @@ var ProductDao = require('./dao/ProductDao');
 var myfunct = function (){ 
   console.log("run search");
   var t = Date.now();
-  ProductDao.search('sữa Physiolac trẻ em phát triển chiều cao, tránh táo bón', {}, {id: 1}, function(err, res){
-  // console.log(res);
+  ProductDao.search('kem đánh răng', {}, {_id: 0}, function(err, res){
+  console.log(res);
   
   console.log("len: " + res.length);
   console.log("time: " + (Date.now() - t)/1000 + "s");

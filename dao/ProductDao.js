@@ -166,50 +166,43 @@ class ProductDao {
 
 		var splitRegex = /[+-, ?.;'\"\s()]+/;
 		var X = keyword.toLocaleUpperCase().trim().split(splitRegex);
-	
 
-		var s = function (limit, skip) {
-			// console.log(skip + "-" + (limit + skip));
-		
-			productsCollection.find(query, { projection: projection, limit: limit, skip: skip }).toArray(function (err, res) {
-				// console.log('loaded: ' + res.length);
-				if (err || Validate.isEmpty(res) || res.length == 0) {
-					searchresult.sort((a, b) => {
-						var match = -a['match_percent'] + b['match_percent'];
-						var lcs = -a['LCS'] + b['LCS'];
-						var distance = a['edit_distance'] - b['edit_distance'];
+		productsCollection.find(query, { projection: projection }).toArray(function (err, res) {
+			// console.log('loaded: ' + res.length);
+			if (err || Validate.isEmpty(res) || res.length == 0) {
+				callback(err, searchresult);
+			} else {
 
-						return match != 0 ? match : (lcs != 0 ? lcs : (distance));
-					});
-
-					callback(err, searchresult);
-
-				}
-				s(limit, skip + limit);
-				
 				for (var i = 0, l = res.length; i < l; i++) {
 					// var item = res[i];
 					// console.log(res[i]);
 					var docString = (res[i]['name'] || '') + ' ' + (res[i]['described'] || '') + ' ' + (res[i]['brand']['brand_name'] || '') + ' ' + (res[i]['seller']['name'] || '');
 					var cmpres = Compare(X, docString.toLocaleUpperCase().trim().split(splitRegex));
 
-
 					if (cmpres['match_percent'] > 80) {
 						// console.log(res);
 						searchresult.push({ ...res[i], ...cmpres });
 					}
-				}	
-				// console.log("done: " + skip);
-				
-			});
-		}
+				}
 
-		s(3000, 0);
-		
+				searchresult.sort((a, b) => {
+					var match = -a['match_percent'] + b['match_percent'];
+					var lcs = -a['LCS'] + b['LCS'];
+					var distance = a['edit_distance'] - b['edit_distance'];
+
+					return match != 0 ? match : (lcs != 0 ? lcs : (distance));
+				});
+
+				callback(null, searchresult);
+			}
+
+		});
 	}
 
 
 }
+
+
 
 ProductDao.getCollection(function () {
 	console.log("ProductDao");

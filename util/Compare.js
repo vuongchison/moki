@@ -16,7 +16,7 @@ module.exports = function (x = [], y = []) {
         y = t;
     }
 
-    var n = x.length, m = y.length;
+    var N = n = x.length, m = y.length;
 
     var xhashmap = {}, yhashmap = {};
     for (var i = 0; i < n; i++) {
@@ -119,5 +119,5 @@ module.exports = function (x = [], y = []) {
     }
 
     // return S[n][m], d[n][m]
-    return { LCS: S.get(n, m), count: count, edit_distance: d.get(n, m), match_percent: Math.floor(count / n * 100) || 0 };
+    return { LCS: S.get(n, m), count: count, edit_distance: d.get(n, m), match_percent: Math.floor(count / N * 100) || 0 };
 }
