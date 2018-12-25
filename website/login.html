@@ -7,25 +7,59 @@
 
 <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/styles.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+
 <script type="text/javascript">
-    Function checkInput ( )
-{
-//kiem tra user name
-If ( document.flogin.USERNAME.value= =””)
-{
-Alert( “invalidEmail, Vui long nhap Email”);
-document.flogin.USERNAME.focus( );
-return false;
-}
-//kiem tra password
-If ( document.flogin.PASSWORD.value= =””)
-{
-Alert( “ Vui long nhap password”);
-document.flogin.PASSWORD.focus( );
-return false;
-}
-Return true;
-}
+    $("#btn_login").on("click", function(){
+        var phonenumber = $("#UserPhonenumber").val();
+        var password = $("#UserPassword").val();
+        var error = $("#error");
+        var ok = $("#ok");
+ 
+        // resert 2 thẻ div thông báo trở về rỗng mỗi khi click nút đăng nhập
+        error.html("");
+        ok.html("");
+ 
+        // Kiểm tra nếu username rỗng thì báo lỗi
+        if (phonenumber == "") {
+            error.html("Số điện thoại không được để trống");
+            return false;
+        }
+        // Kiểm tra nếu password rỗng thì báo lỗi
+        if (password == "") {
+            error.html("Mật khẩu không được để trống");
+            return false;
+        }
+        
+        // để kiểm tra thông tin đăng nhập hợp lệ hay chưa và lấy dữ liệu trả về
+        $.ajax({
+          url: "/api/login",
+          method: "POST",
+          data: { "phonenumber" : phonenumber, "password" : password },
+          success : function(response){
+            var res=JSON.parse(response);
+            var code=res.code;
+            var message=res.message;
+            var data=res.data;
+            var id=res.data.id;
+            var name=res.data.username;
+            var token=res.data.token;
+            var avata=res.data.avata;
+            if(code==1000) ok.html("OK");
+            if(code==9995) error.html("User is not validated");
+            if(code==9998) error.html("Token is invalided");
+
+
+            var table=$("#content-table");
+            $("#content-table>tbody:last").children().remove();
+            table.append("<tr><td>"+code+"</td><td>"+message+"</td><td>"+data.id+"</td><td>"+data.username+"</td><td>"+data.token+"</td><td>"+data.avata+"</td></tr>");
+          
+      }
+        });
+ 
+    });
 </script>
 </head>
 <body>
@@ -90,7 +124,7 @@ Return true;
          <div class="col-md-8 col-md-offset-2"  style="background-color: #fff;margin-bottom:60px;">
             <div class="DangNhap" style="margin-top: 24px;">
              <div class="login_header" style="border-bottom: border-box;font-family: arial,sans-serif;font-size: 16px; "><b>Đăng nhập hoặc tạo tài khoản MOKI</b><hr></div>
- <form name="login" method="post" action="" onsubmit="return checkinput();">
+ <form name="login" id="form-login" method="post" action="" onsubmit="return function();">
 <div class="form-group">
     <label class="col-md-3 control-label" style="font-family: sans-serif;margin-left: 30px;">Nhập số điện thoại</label>
      <div class="col-md-6" style="margin-left: -30px;">
@@ -126,17 +160,27 @@ Return true;
 </div>
 <div class="form-group">
      <div class="col-md-6 col-md-offset-3" style="margin-top: 20px;margin-bottom: 20px; height: 100px;">
-    <button type="submit" class="btn btn-default text-right" style="background-color:#f16e8e;color:#fff;width: 345px;border-bottom: outset;border-color: #b91635;  ">Tiếp tục</button>
+    <button id="btn-login" type="submit" class="btn btn-default text-right" style="background-color:#f16e8e;color:#fff;width: 345px;border-bottom: outset;border-color: #b91635;">Tiếp tục</button>
         </div>
-  </div>
+</div>
  </form>
     </div>
   </div>
 </div>
-        
-
     </div>
     </div>
+    <table id="content-table" style="opacity:0;">
+        <thread>
+            <tr>
+                <th>code</th>
+                <th>message</th>
+                <th>data_id</th>
+                <th>data_username</th>
+                <th>data_token</th>
+                <th>data_avatar</th>
+            </tr>
+        </thread>
+    </table>
     <!-- Dong Phan than-->
     <div class="foorter">
             <div class="container">
@@ -263,7 +307,7 @@ $("body,html").animate({scrollTop: 0}, 800);
            <a href="#" style="position: fixed;right: 5px;bottom: 0px;"><img src="img/chatbox-nv.png"/></a>
     </div>
     <!-- phần chat bot cho MOKI -->
-    <div class="chatbot" style="position: fixed;right: 150px;bottom: 0px;">
+    <div class="chatbot" style="position: fixed;right: 150px;bottom: 0px;opacity:0;">
        <div class="topchat">
                     <div class="dot float"></div>
                     <div class="float"> Chát với chúng tôi(Hotline:1900 636 779 )</div>

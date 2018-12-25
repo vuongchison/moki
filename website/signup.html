@@ -8,27 +8,52 @@
 <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/styles.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.7/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <script type="text/javascript">
-    Function checkInput ( )
-{
-//kiem tra user name
-If ( document.flogin.USERNAME.value= ="")
-{
-Alert( "invalidEmail, Vui long nhap Email");
-document.flogin.USERNAME.focus( );
-return false;
-}
-//kiem tra password
-If ( document.flogin.PASSWORD.value= ="")
-{
-Alert( "Vui long nhap password");
-document.flogin.PASSWORD.focus( );
-return false;
-}
-Return true;
-}
+    $("#signup").on("click", function(){
+        var phonenumber = $("#UserPhonenumber").val();
+        var password = $("#UserPassword").val();
+        var error = $("#error");
+        var ok = $("#ok");
+ 
+        // resert 2 thẻ div thông báo trở về rỗng mỗi khi click nút đăng nhập
+        error.html("");
+        ok.html("");
+ 
+        // Kiểm tra nếu username rỗng thì báo lỗi
+        if (phonenumber == "") {
+            error.html("Số điện thoại không được để trống");
+            return false;
+        }
+        // Kiểm tra nếu password rỗng thì báo lỗi
+        if (password == "") {
+            error.html("Mật khẩu không được để trống");
+            return false;
+        }
+        
+        // để kiểm tra thông tin đăng nhập hợp lệ hay chưa và lấy dữ liệu trả về
+        $.ajax({
+          url: "/api/signup",
+          method: "POST",
+          data: { "phonenumber" : phonenumber, "password" : password },
+          success : function(response){
+            var res=JSON.parse(response);
+            var code=res.code;
+            var message=res.message;
+            var data=res.data;
+            var id=res.data.id;
+            var name=res.data.username;
+            var token=res.data.token;
+            var avata=res.data.avata;
+            if(code==1000) ok.html("OK");
+            if(code==9995) error.html("User is not validated");
+            if(code==9998) error.html("Token is invalided");
+          }
+        });
+ 
+    });
 </script>
 
 
@@ -271,7 +296,7 @@ Return true;
 
     </div> 
     <!-- kết thúc div cho phần foorter -->
-<div class="scrollToTop" style="position: fixed;right: 5px;bottom: 100px;"><a href="#" class="btn btn-info btn-lg" style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
+<div class="scrollToTop" style="position: fixed;right: 5px;bottom: 300px;"><a href="#" class="btn btn-info btn-lg" style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
     <span class="glyphicon glyphicon-chevron-up"></span>
 </a></div>
 <script type="text/javascript">
@@ -286,65 +311,40 @@ $("body,html").animate({scrollTop: 0}, 800);
 });
 </script>
 
-<div ng-controller="ChatController" id="chatbox_support" class="ng-scope">
-    <div class="nhanvien">
-        <img src="img/chatbox-nv.png" alt="Moki.vn - Ứng dụng mua bán trên di động">
-    </div>
-    <div class="chatbox">
-        <div class="head" ng-click="openChat()">
-          <div class="title">Chat với chúng tôi ( Hotline: <span>1900</span> <span>636</span> <span>779</span> )</div>
- </div>
-        <div ng-show="view == 'signup'">
-            <div class="content">
-                <form class="form_chat" name="loginForm" novalidate="">
-                    <input type="text" ng-model="name" ng-minlength="4" ng-maxlength="12" class="nhapten" placeholder="Xin mời nhập tên của bạn" required="">
-
-                    <input type="number" ng-model="phone" ng-minlength="10" ng-maxlength="11" class="nhapsdt" placeholder="Xin mời nhập Số điện thoại" required="">
-
-                    <input type="email" class="nhapemail" placeholder="Xin mời nhập Email" ng-model="email" required="" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}">
-
-                    <button type="submit" ng-click="loginEvent()">Bắt đầu chat</button>
-                </form>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
-
-
-
-<!-- phần chat bot cho MOKI
-
-<div class="chatbot">
-    <div class="topchat">
-        <div class="dot float"></div>
-        <div class="float"> Chát với chúng tôi(Hotline:1900 636 779 )</div>
-    </div>
-    <div class="nhap">
-         <form action="" method="">
-            <input type="text" placeholder="Xin mời nhập tên của bạn"/>
-         </form>
-    </div>
-    <div class="nhap">
-          <form action="" method="">
-            <input type="text" placeholder="Xin mời nhập số điện thoại"/>
-           </form>
-    </div>
-    <div class="nhap">
-          <form action="" method="">
-             <input type="text" placeholder="Xin mời nhập Email"/>
-        </form>
-    </div>
-    <div class="submit">
-           <button type="submit"> Bắt đầu chat</button>
-    </div>
-</div>
-
 <div class="nhanvien">
-    <a href="#" ><img src="img/chatbox-nv.png"/></a>
-</div>
--->
+           <a href="#" style="position: fixed;right: 5px;bottom: 0px;"><img src="img/chatbox-nv.png"/></a>
+    </div>
+    <!-- phần chat bot cho MOKI -->
+    <div class="chatbot" style="position: fixed;right: 150px;bottom: 0px;opacity:0;">
+       <div class="topchat">
+                    <div class="dot float"></div>
+                    <div class="float"> Chát với chúng tôi(Hotline:1900 636 779 )</div>
+
+            </div>
+            <div class="nhap">
+                    <form action="" method="">
+                            <input type="text" placeholder="Xin mời nhập tên của bạn"/>
+                    </form>
+            </div>
+            <div class="nhap">
+                    <form action="" method="">
+                            <input type="text" placeholder="Xin mời nhập số điện thoại"/>
+                    </form>
+            </div>
+            <div class="nhap">
+                    <form action="" method="">
+                            <input type="text" placeholder="Xin mời nhập Email"/>
+                    </form>
+            </div>
+            <div class="submit">
+                    <button type="submit"> Bắt đầu chat</button>
+            </div>
+    </div>
+
+
+
+
+
+
 </body>
 </html>

@@ -1777,7 +1777,7 @@ function showSlides() {
 
     </div> 
     <!-- kết thúc div cho phần foorter -->
-    <div class="scrollToTop" style="position: fixed;right: 5px;bottom: 100px;"><a href="#" class="btn btn-info btn-lg" style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
+   <div class="scrollToTop" style="position: fixed;right: 5px;bottom: 300px;"><a href="#" class="btn btn-info btn-lg" style=" border-bottom: outset;background-color: #f16e8e;border-color: #b91635">
     <span class="glyphicon glyphicon-chevron-up"></span>
 </a></div>
 <script type="text/javascript">
@@ -1791,13 +1791,16 @@ $("body,html").animate({scrollTop: 0}, 800);
 });
 });
 </script>
-    <div class="nhanvien">
-           <a href="#" ><img src="img/chatbox-nv.png"/></a>
+
+<div class="nhanvien">
+           <a href="#" style="position: fixed;right: 5px;bottom: 0px;"><img src="img/chatbox-nv.png"/></a>
     </div>
     <!-- phần chat bot cho MOKI -->
-    <div class="chatbot">
-            <div class="topchat" onclick="openChat()">
-                    <div class="float" > Chát với chúng tôi(Hotline:1900 636 779 )</div>
+    <div class="chatbot" style="position: fixed;right: 150px;bottom: 0px;opacity:0;">
+       <div class="topchat">
+                    <div class="dot float"></div>
+                    <div class="float"> Chát với chúng tôi(Hotline:1900 636 779 )</div>
+
             </div>
             <div class="nhap">
                     <form action="" method="">
