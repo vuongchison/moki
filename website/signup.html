@@ -15,6 +15,9 @@
     $("#signup").on("click", function(){
         var phonenumber = $("#UserPhonenumber").val();
         var password = $("#UserPassword").val();
+        
+        //var uuid=
+        
         var error = $("#error");
         var ok = $("#ok");
  
@@ -37,19 +40,20 @@
         $.ajax({
           url: "/api/signup",
           method: "POST",
-          data: { "phonenumber" : phonenumber, "password" : password },
+          data: { "phonenumber" : phonenumber, "password" : password, "uuid": uuid,},
           success : function(response){
             var res=JSON.parse(response);
             var code=res.code;
             var message=res.message;
             var data=res.data;
-            var id=res.data.id;
-            var name=res.data.username;
-            var token=res.data.token;
-            var avata=res.data.avata;
+            
             if(code==1000) ok.html("OK");
-            if(code==9995) error.html("User is not validated");
-            if(code==9998) error.html("Token is invalided");
+            if(code==9996) error.html("User existed");
+            if(code==9993) error.html("Code verify is incorrect");
+
+     var table=$("#content-table");
+   $("#content-table>tbody:last").children().remove();
+  table.append("<tr><td>"+code+"</td><td>"+message+"</td><td>"+data+"</td></tr>");
           }
         });
  
@@ -178,17 +182,18 @@
     </div>
   </div>
 </div>
-        
-
-
-
-
-
-
-
-
     </div>
     </div>
+
+  <table id="content-table" style="opacity:0;">
+        <thread>
+            <tr>
+                <th>code</th>
+                <th>message</th>
+                <th>data</th>
+            </tr>
+        </thread>
+    </table>
     <!-- Dong Phan than-->
     <div class="foorter">
             <div class="container">
